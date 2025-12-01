@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pentanik 24 Inch Double Glass Basic TV – Product Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --primary:#2563eb;
+            --primary-soft:#eff4ff;
+            --dark:#111827;
+        }
+
+        *{box-sizing:border-box;}
+
+        body{
+            font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+            background: radial-gradient(circle at top left,#e0f2fe,#f9fafb 40%);
+            color:var(--dark);
+        }
+
+        .page-wrapper{max-width:1200px;}
+
+        /* Navbar */
+        .navbar{
+            backdrop-filter:blur(16px);
+            background:rgba(255,255,255,0.9) !important;
+            border-bottom:1px solid rgba(148,163,184,.25);
+        }
+        .navbar-brand img{height:34px;}
+        .nav-link{font-weight:500;color:#4b5563 !important;}
+        .nav-link.active{color:var(--primary) !important;}
+
+        .search-wrapper .form-control{
+            border-left:0;
+            box-shadow:none;
+        }
+        .search-wrapper .input-group-text{
+            border-right:0;
+            background:transparent;
+        }
+
+        .content-wrapper{
+            margin-top:88px;
+            padding-top:1.5rem;
+            padding-bottom:3rem;
+        }
+        @media (max-width:575.98px){
+            .content-wrapper{margin-top:76px;}
+        }
+
+        /* Cart dropdown */
+        .cart-dropdown-menu{
+            width:min(340px,100vw - 1.5rem);
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+        }
+        .cart-items-list{max-height:260px;overflow-y:auto;}
+        .cart-item-thumb{
+            width:60px;height:60px;object-fit:contain;border-radius:8px;background:#f9fafb;
+        }
+
+        /* Product detail */
+        .product-title-main{
+            font-size:1.6rem;
+            font-weight:700;
+        }
+        .product-gallery-card{
+            border-radius:20px;
+            background:#ffffff;
+            border:1px solid #e5e7eb;
+            padding:1.4rem 1.6rem;
+        }
+        .product-main-img{
+            border-radius:18px;
+            background:#f9fafb;
+        }
+        .product-main-img img{
+            width:100%;
+            max-height:340px;
+            object-fit:contain;
+            display:block;
+        }
+
+        .product-gallery{
+            display:flex;
+            gap:1rem;
+        }
+        .product-thumbs{
+            display:flex;
+            flex-direction:column;
+            gap:.75rem;
+        }
+        .product-thumb{
+            width:70px;height:70px;
+            border-radius:12px;
+            overflow:hidden;
+            border:2px solid transparent;
+            cursor:pointer;
+            background:#f3f4f6;
+        }
+        .product-thumb img{
+            width:100%;height:100%;object-fit:contain;
+        }
+        .product-thumb.active{
+            border-color:var(--primary);
+        }
+
+        @media (max-width:767.98px){
+            .product-gallery{
+                flex-direction:column;
+            }
+            .product-thumbs{
+                flex-direction:row;
+                justify-content:center;
+                order:2;
+            }
+        }
+
+        .detail-bullets li{
+            padding-bottom:.15rem;
+        }
+
+        .detail-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:.4rem;
+            padding:.4rem .9rem;
+            border-radius:999px;
+            background:#f3f4ff;
+            font-size:.9rem;
+            font-weight:600;
+            color:#111827;
+        }
+        .detail-pill .price-current{
+            color:#dc2626;
+            font-weight:700;
+        }
+        .detail-pill .price-old{
+            color:#9ca3af;
+            text-decoration:line-through;
+            font-size:.85rem;
+        }
+        .detail-pill.status-pill{
+            background:#f3f4f6;
+        }
+        .status-out{color:#b91c1c;}
+        .status-in{color:#16a34a;}
+
+        .btn-buy-now{
+            background:var(--primary);
+            border:none;
+            font-weight:600;
+        }
+        .btn-buy-now:hover{
+            background:#1d4ed8;
+        }
+        .btn-add-cart{
+            background:var(--primary-soft);
+            border:none;
+            font-weight:600;
+            color:#1d4ed8;
+        }
+        .btn-add-cart:hover{
+            background:#dbeafe;
+            color:#1d4ed8;
+        }
+
+        /* Tabs */
+        .product-tabs .nav-link{
+            border:none;
+            border-radius:0;
+            font-weight:500;
+            color:#4b5563;
+        }
+        .product-tabs .nav-link.active{
+            color:var(--primary);
+            border-bottom:2px solid var(--primary);
+            background:transparent;
+        }
+
+        .tab-card{
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+            background:#ffffff;
+            padding:1.5rem 1.5rem 2rem;
+        }
+
+        .specs-table th,
+        .specs-table td{
+            font-size:.9rem;
+            padding:.55rem .75rem;
+        }
+        .specs-table th{
+            width:30%;
+            background:#f9fafb;
+            font-weight:600;
+        }
+
+        footer{
+            border-top:1px solid rgba(148,163,184,.4);
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container page-wrapper">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="Ponnobd">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">AC</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">TV Remote</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+            </ul>
+
+            <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input class="form-control" type="search" placeholder="Search products…">
+                </div>
+            </form>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a>
+
+                <!-- Cart dropdown -->
+                <div class="dropdown">
+                    <button class="btn p-0 border-0 bg-transparent text-dark position-relative fs-5"
+                            id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-cart3"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            1
+                        </span>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+                         aria-labelledby="cartDropdown">
+                        <div class="p-3 border-bottom">
+                            <h6 class="mb-0 fw-semibold">Cart (1 item)</h6>
+                        </div>
+
+                        <div class="cart-items-list">
+                            <div class="d-flex align-items-center p-3">
+                                <img src="https://via.placeholder.com/80x60?text=24%22"
+                                     class="cart-item-thumb me-3" alt="">
+                                <div class="flex-grow-1">
+                                    <div class="small fw-semibold">Pentanik 24&quot; Double Glass TV</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <span class="small text-muted">Qty: 1</span>
+                                        <span class="small fw-semibold text-danger">৳8000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 border-top">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Subtotal</span>
+                                <span class="fw-bold text-danger">৳8000</span>
+                            </div>
+                            <a href="/checkout" class="btn btn-primary w-100 btn-sm">Go to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="content-wrapper">
+    <div class="container page-wrapper">
+        <!-- Top product info -->
+        <div class="row g-4 align-items-start mb-4">
+            <!-- Gallery -->
+            <div class="col-lg-6">
+                <div class="product-gallery-card">
+                    <div class="product-gallery">
+                        <div class="product-thumbs me-2">
+                            <div class="product-thumb active">
+                                <img src="https://via.placeholder.com/120x80?text=Front" alt="">
+                            </div>
+                            <div class="product-thumb">
+                                <img src="https://via.placeholder.com/120x80?text=Back" alt="">
+                            </div>
+                            <div class="product-thumb">
+                                <img src="https://via.placeholder.com/120x80?text=Side" alt="">
+                            </div>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="product-main-img p-3">
+                                <img src="https://via.placeholder.com/640x360?text=24%22+Double+Glass+TV"
+                                     alt="Pentanik 24 Inch Double Glass TV">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="col-lg-6">
+                <h1 class="product-title-main mb-2">
+                    Pentanik 24 Inch Basic Double Glass TV
+                </h1>
+
+                <ul class="list-unstyled small text-muted detail-bullets mb-3">
+                    <li>1 Year Parts Panel Replacement Guarantee</li>
+                    <li>10 Years Free Service Warranty (Without Parts)</li>
+                    <li>EMI system available</li>
+                    <li>Home delivery + installation (Dhaka City)</li>
+                    <li>Outside Dhaka: Courier delivery</li>
+                </ul>
+
+                <p class="mb-3 fw-semibold">
+                    Details : <a href="tel:+8801880162323" class="text-decoration-none text-primary">
+                    +8801880162323</a>
+                </p>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                    <div class="detail-pill">
+                        <span>Price:</span>
+                        <span class="price-current">৳8000</span>
+                        <span class="price-old">৳8800</span>
+                    </div>
+
+                    <div class="detail-pill status-pill">
+                        <span>Status:</span>
+                        <span class="status-out">Out Of Stock</span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button class="btn btn-buy-now px-4 py-2 text-white">
+                        Buy Now
+                    </button>
+                    <button class="btn btn-add-cart px-4 py-2">
+                        <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                    </button>
+                </div>
+
+                <p class="small text-muted mb-0">
+                    * Price in Bangladesh may change without prior notice. Please confirm the latest price over phone.
+                </p>
+            </div>
+        </div>
+
+        <!-- Tabs: specs / description / etc. -->
+        <ul class="nav nav-tabs product-tabs mb-3" id="productTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="specs-tab" data-bs-toggle="tab"
+                        data-bs-target="#specs" type="button" role="tab">
+                    Specifications
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="desc-tab" data-bs-toggle="tab"
+                        data-bs-target="#desc" type="button" role="tab">
+                    Descriptions
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="support-tab" data-bs-toggle="tab"
+                        data-bs-target="#support" type="button" role="tab">
+                    Support
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gallery-tab" data-bs-toggle="tab"
+                        data-bs-target="#gallery" type="button" role="tab">
+                    Galleries
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="video-tab" data-bs-toggle="tab"
+                        data-bs-target="#video" type="button" role="tab">
+                    Video
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                        data-bs-target="#reviews" type="button" role="tab">
+                    Reviews
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Specifications -->
+            <div class="tab-pane fade show active" id="specs" role="tabpanel" aria-labelledby="specs-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Pentanik 24 Inch Double Glass Basic TV</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered specs-table mb-0">
+                            <tbody>
+                            <tr>
+                                <th>Display Type</th>
+                                <td>LED TV</td>
+                            </tr>
+                            <tr>
+                                <th>Screen Size</th>
+                                <td>SCREEN SIZE 24"</td>
+                            </tr>
+                            <tr>
+                                <th>Resolution</th>
+                                <td>HD 1080 × 720</td>
+                            </tr>
+                            <tr>
+                                <th>Operating System</th>
+                                <td>Basic</td>
+                            </tr>
+                            <tr>
+                                <th>Color</th>
+                                <td>Black</td>
+                            </tr>
+                            <tr>
+                                <th>Display Resolution</th>
+                                <td>Maximum – 1080</td>
+                            </tr>
+                            <tr>
+                                <th>Aspect Ratio</th>
+                                <td>16:9</td>
+                            </tr>
+                            <tr>
+                                <th>Ports</th>
+                                <td>HDMI, USB, AV In, Audio Out</td>
+                            </tr>
+                            <tr>
+                                <th>Power</th>
+                                <td>AC 100–240V, 50/60Hz</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="tab-pane fade" id="desc" role="tabpanel" aria-labelledby="desc-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Product Description</h5>
+                    <p class="small text-muted">
+                        Pentanik 24 Inch Double Glass Basic TV gives you bright, vivid picture and clear sound
+                        in a compact size. Perfect for bedrooms, kitchens or small living rooms. The double-glass
+                        panel adds extra protection and durability for long-term use.
+                    </p>
+                    <ul class="small">
+                        <li>Energy efficient LED backlight</li>
+                        <li>Multiple picture modes and sound presets</li>
+                        <li>Wall mount or table stand both supported</li>
+                        <li>Official Pentanik warranty in Bangladesh</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Support -->
+            <div class="tab-pane fade" id="support" role="tabpanel" aria-labelledby="support-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Support & Warranty</h5>
+                    <p class="small text-muted mb-2">
+                        For any service or warranty claim, please call our hotline or message our Facebook page.
+                    </p>
+                    <ul class="small">
+                        <li>1 Year parts & panel replacement guarantee</li>
+                        <li>10 Years free service warranty (without parts)</li>
+                        <li>Home installation support inside Dhaka city</li>
+                        <li>Courier delivery & support for outside Dhaka</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Galleries -->
+            <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Image Gallery</h5>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <img src="https://via.placeholder.com/300x200?text=Front"
+                                 class="img-fluid rounded-3" alt="">
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <img src="https://via.placeholder.com/300x200?text=Back"
+                                 class="img-fluid rounded-3" alt="">
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <img src="https://via.placeholder.com/300x200?text=Side"
+                                 class="img-fluid rounded-3" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video -->
+            <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Product Video</h5>
+                    <div class="ratio ratio-16x9">
+                        <!-- Replace src with your YouTube embed link -->
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Product video"
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                <div class="tab-card">
+                    <h5 class="mb-3">Customer Reviews</h5>
+                    <p class="small text-muted mb-3">There are no reviews yet. Be the first to review this product.</p>
+                    <button class="btn btn-outline-primary btn-sm">Write a Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-white py-3">
+    <div class="container page-wrapper d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <small class="text-muted">© 2025 Ponnobd Electronics. All rights reserved.</small>
+        <small class="text-muted">Powered by <span class="fw-semibold">Pentanik TV</span></small>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

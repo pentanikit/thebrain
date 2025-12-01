@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart – Ponnobd Electronics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --primary:#2563eb;
+            --primary-soft:#eff4ff;
+            --dark:#111827;
+        }
+
+        *{box-sizing:border-box;}
+
+        body{
+            font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+            background: radial-gradient(circle at top left,#e0f2fe,#f9fafb 40%);
+            color:var(--dark);
+        }
+
+        .page-wrapper{max-width:1200px;}
+
+        /* Navbar (same as other pages) */
+        .navbar{
+            backdrop-filter:blur(16px);
+            background:rgba(255,255,255,0.9) !important;
+            border-bottom:1px solid rgba(148,163,184,.25);
+        }
+        .navbar-brand img{height:34px;}
+        .nav-link{font-weight:500;color:#4b5563 !important;}
+        .nav-link.active{color:var(--primary) !important;}
+
+        .search-wrapper .form-control{
+            border-left:0;
+            box-shadow:none;
+        }
+        .search-wrapper .input-group-text{
+            border-right:0;
+            background:transparent;
+        }
+
+        .content-wrapper{
+            margin-top:88px;
+            padding-top:1.5rem;
+            padding-bottom:3rem;
+        }
+        @media (max-width:575.98px){
+            .content-wrapper{margin-top:76px;}
+        }
+
+        /* Cart dropdown (same style as others) */
+        .cart-dropdown-menu{
+            width:min(340px,100vw - 1.5rem);
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+        }
+        .cart-items-list{max-height:260px;overflow-y:auto;}
+        .cart-item-thumb{
+            width:60px;height:60px;object-fit:contain;border-radius:8px;background:#f9fafb;
+        }
+
+        /* Cart page */
+        .cart-title{
+            font-size:2rem;
+            font-weight:700;
+        }
+        .breadcrumb-link{
+            font-size:.9rem;
+        }
+
+        .cart-table-card{
+            border-radius:18px;
+            background:#ffffff;
+            border:1px solid #e5e7eb;
+            padding:1.4rem 1.6rem;
+        }
+
+        .cart-product-img{
+            width:80px;height:60px;
+            object-fit:contain;
+        }
+
+        .cart-product-name{
+            font-size:.95rem;
+            font-weight:600;
+        }
+
+        .qty-box{
+            border-radius:999px;
+            overflow:hidden;
+            border:1px solid #e5e7eb;
+            display:inline-flex;
+            align-items:center;
+        }
+        .qty-box button{
+            border:0;
+            background:#f9fafb;
+            width:32px;
+            height:32px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:.85rem;
+        }
+        .qty-box input{
+            width:40px;
+            border:0;
+            text-align:center;
+            font-size:.9rem;
+        }
+
+        .price-text{
+            font-weight:600;
+        }
+
+        .cart-summary-card{
+            border-radius:18px;
+            background:#f3f4f6;
+            padding:1.5rem 1.8rem;
+            border:1px solid #e5e7eb;
+        }
+
+        .btn-checkout{
+            background:var(--primary-soft);
+            border:none;
+            font-weight:600;
+            color:#1d4ed8;
+        }
+        .btn-checkout:hover{
+            background:var(--primary);
+            color:#fff;
+        }
+
+        @media (max-width:991.98px){
+            .cart-summary-wrapper{
+                margin-top:1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container page-wrapper">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="Ponnobd">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">AC</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">TV Remote</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+            </ul>
+
+            <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input class="form-control" type="search" placeholder="Search products…">
+                </div>
+            </form>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a>
+
+                <!-- Mini cart dropdown -->
+                <div class="dropdown">
+                    <button class="btn p-0 border-0 bg-transparent text-dark position-relative fs-5"
+                            id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-cart3"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            1
+                        </span>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+                         aria-labelledby="cartDropdown">
+                        <div class="p-3 border-bottom">
+                            <h6 class="mb-0 fw-semibold">Cart (1 item)</h6>
+                        </div>
+
+                        <div class="cart-items-list">
+                            <div class="d-flex align-items-center p-3">
+                                <img src="https://via.placeholder.com/80x60?text=24%22"
+                                     class="cart-item-thumb me-3" alt="">
+                                <div class="flex-grow-1">
+                                    <div class="small fw-semibold">Pentanik 24&quot; Basic TV</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <span class="small text-muted">Qty: 1</span>
+                                        <span class="small fw-semibold text-danger">৳7500</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 border-top">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Subtotal</span>
+                                <span class="fw-bold text-danger">৳7500</span>
+                            </div>
+                            <a href="/checkout" class="btn btn-primary w-100 btn-sm">Go to Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CART CONTENT -->
+<div class="content-wrapper">
+    <div class="container page-wrapper">
+        <!-- Title + breadcrumb -->
+        <div class="text-center mb-4">
+            <h1 class="cart-title mb-1">Cart</h1>
+            <div class="breadcrumb-link">
+                <a href="#" class="text-muted text-decoration-none">Home</a>
+                <span class="mx-1">/</span>
+                <span class="fw-semibold">Cart</span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Cart table -->
+            <div class="col-lg-8">
+                <div class="cart-table-card">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="small text-muted">
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col" class="text-center">Price</th>
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th scope="col" class="text-end">Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Row 1 -->
+                            <tr data-price="7500">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/110x70?text=24%22+TV"
+                                             class="cart-product-img me-3" alt="">
+                                        <div>
+                                            <div class="cart-product-name">
+                                                Pentanik 24 Inch Basic TV (Frameless)
+                                            </div>
+                                            <a href="#" class="small text-danger text-decoration-none">
+                                                Remove
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="price-text">৳<span class="unit-price">7500</span></span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="qty-box">
+                                        <button class="btn-qty-minus" type="button">-</button>
+                                        <input type="text" class="qty-input" value="1" readonly>
+                                        <button class="btn-qty-plus" type="button">+</button>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <span class="price-text">৳<span class="row-total">7500</span></span>
+                                </td>
+                            </tr>
+
+                            <!-- Example additional row (copy and adjust numbers if needed)
+                            <tr data-price="14000">
+                                ...
+                            </tr>
+                            -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="col-lg-4 cart-summary-wrapper">
+                <div class="cart-summary-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-semibold">Subtotal:</span>
+                        <span class="fw-bold fs-5 text-danger">৳<span id="cartSubtotal">7500</span></span>
+                    </div>
+                    <button class="btn btn-checkout w-100 py-2 mb-2">
+                        Proceed To Checkout (<span id="cartItemsCount">1</span>)
+                    </button>
+                    <small class="text-muted d-block">
+                        Shipping charges & VAT will be calculated at checkout. By placing the order,
+                        you agree to our terms and conditions.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-white py-3">
+    <div class="container page-wrapper d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <small class="text-muted">© 2025 Ponnobd Electronics. All rights reserved.</small>
+        <small class="text-muted">Powered by <span class="fw-semibold">Pentanik TV</span></small>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Simple quantity & subtotal update (optional) -->
+<script>
+    function recalcCart() {
+        let subtotal = 0;
+        let totalItems = 0;
+
+        document.querySelectorAll('tbody tr[data-price]').forEach(function (row) {
+            const unitPrice = parseInt(row.getAttribute('data-price'), 10) || 0;
+            const qtyInput = row.querySelector('.qty-input');
+            const qty = parseInt(qtyInput.value, 10) || 0;
+            const rowTotal = unitPrice * qty;
+
+            row.querySelector('.row-total').textContent = rowTotal;
+            subtotal += rowTotal;
+            totalItems += qty;
+        });
+
+        document.getElementById('cartSubtotal').textContent = subtotal;
+        document.getElementById('cartItemsCount').textContent = totalItems;
+    }
+
+    document.querySelectorAll('.btn-qty-minus').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const input = this.parentElement.querySelector('.qty-input');
+            let value = parseInt(input.value, 10) || 1;
+            if (value > 1) {
+                input.value = value - 1;
+                recalcCart();
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-qty-plus').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const input = this.parentElement.querySelector('.qty-input');
+            let value = parseInt(input.value, 10) || 1;
+            input.value = value + 1;
+            recalcCart();
+        });
+    });
+</script>
+</body>
+</html>

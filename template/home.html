@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ponnobd – Regular Pentanik TV 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-soft: #eff4ff;
+            --dark: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #e0f2fe, #f9fafb 40%);
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.88) !important;
+            border-bottom: 1px solid rgba(148, 163, 184, .25);
+        }
+
+        .navbar-brand img {
+            height: 34px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #4b5563 !important;
+        }
+
+        .nav-link.active {
+            color: var(--primary) !important;
+        }
+
+        /* Search */
+        .search-wrapper .form-control {
+            border-left: 0;
+            box-shadow: none;
+        }
+
+        .search-wrapper .input-group-text {
+            border-right: 0;
+            background: transparent;
+        }
+
+        /* Hero */
+        .page-wrapper {
+            max-width: 1200px;
+        }
+
+        .hero-wrapper {
+            margin-top: 88px;
+        }
+
+        .banner-card {
+            border-radius: 24px;
+            overflow: hidden;
+            background: #0f172a;
+            position: relative;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, .35);
+        }
+
+        .banner-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .banner-badge {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            padding: .25rem .7rem;
+            border-radius: 999px;
+            font-size: .75rem;
+            background: rgba(15, 23, 42, .72);
+            color: #e5e7eb;
+        }
+
+        /* Sub banners */
+        .small-banner {
+            border-radius: 18px;
+            overflow: hidden;
+            background: #111827;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, .3);
+        }
+
+        .small-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Category cards */
+        .category-section-title {
+            font-size: 1.05rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .category-card {
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            transition: all .18s ease;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, .12);
+            border-color: var(--primary-soft);
+        }
+
+        .category-card img {
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: .95rem;
+        }
+
+        /* Category horizontal scroll for small screen */
+        .category-row {
+            row-gap: 1rem;
+        }
+
+        @media (max-width:575.98px) {
+            .category-row {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: .5rem;
+            }
+
+            .category-row>div {
+                flex: 0 0 auto;
+            }
+
+            .hero-wrapper {
+                margin-top: 76px;
+            }
+        }
+
+        /* Text section */
+        .section-title {
+            font-weight: 700;
+            font-size: 1.9rem;
+        }
+
+        .section-subtitle {
+            max-width: 750px;
+        }
+
+        .pill-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: .2rem .75rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            background: var(--primary-soft);
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+
+        .pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+            margin-right: .35rem;
+        }
+
+        /* ===== Regular Pentanik TV Product Section ===== */
+        .product-section {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .product-section .section-title {
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .product-section .section-subtitle {
+            max-width: 760px;
+        }
+
+        /* Product card */
+        .product-card {
+            position: relative;
+            border-radius: 22px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            padding: 1.2rem 1.3rem 1.4rem;
+            transition: all .18s ease;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .04);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 38px rgba(15, 23, 42, .10);
+            border-color: var(--primary-soft);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: #111827;
+            color: #f9fafb;
+            padding: .25rem .7rem;
+            font-size: .75rem;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+
+        .product-image-wrapper {
+            text-align: center;
+            padding: 1.5rem 0 .25rem;
+            min-height: 170px;
+        }
+
+        .product-image-wrapper img {
+            max-height: 160px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .product-title {
+            font-size: .95rem;
+            font-weight: 600;
+            color: #1f2937;
+            min-height: 2.7em;
+            /* keep titles same height in grid */
+        }
+
+        .product-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: .9rem 0 1rem;
+        }
+
+        .product-price {
+            font-size: .98rem;
+        }
+
+        .price-current {
+            color: #dc2626;
+            font-weight: 700;
+            margin-right: .35rem;
+        }
+
+        .price-old {
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-size: .9rem;
+        }
+
+        .btn-product {
+            background: var(--primary-soft);
+            border: none;
+            font-weight: 600;
+            color: #1d4ed8;
+            border-radius: 10px;
+            padding: .55rem 1rem;
+        }
+
+        .btn-product:hover {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        /* Small tweaks for very small screens */
+        @media (max-width: 575.98px) {
+            .product-image-wrapper {
+                min-height: 140px;
+                padding-top: 1.1rem;
+            }
+        }
+
+        /* Cart dropdown */
+        .cart-dropdown-menu {
+            width: min(340px, 100vw - 1.5rem);
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .cart-items-list {
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .cart-item-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+
+        footer {
+            border-top: 1px solid rgba(148, 163, 184, .4);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container page-wrapper">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <!-- Logo -->
+            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="Ponnobd">
+        </a>
+
+        <!-- Toggler now opens OFFCANVAS -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mainNavbarOffcanvas"
+                aria-controls="mainNavbarOffcanvas"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">AC</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">TV Remote</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                </ul>
+                                <!-- Search (still hidden on <md, same as before) -->
+                <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input class="form-control" type="search" placeholder="Search products…">
+                    </div>
+                </form>
+
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                    <!-- user -->
+                    <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a>
+
+                    <!-- cart dropdown -->
+                    <div class="dropdown">
+                        <button class="btn p-0 border-0 bg-transparent text-dark position-relative fs-5"
+                                id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-cart3"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                3
+                            </span>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+                            aria-labelledby="cartDropdown">
+                            <!-- header -->
+                            <div class="p-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Cart (3 items)</h6>
+                            </div>
+
+                            <!-- items -->
+                            <div class="cart-items-list">
+                                <!-- Item 1 -->
+                                <div class="d-flex align-items-center p-3">
+                                    <img src="https://via.placeholder.com/80x60?text=24%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 24 Basic">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 24&quot; Basic TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳7500</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 2 -->
+                                <div class="d-flex align-items-center p-3 border-top">
+                                    <img src="https://via.placeholder.com/80x60?text=32%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 32 Smart">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 32&quot; Smart TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳14000</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 3 -->
+                                <div class="d-flex align-items-center p-3 border-top">
+                                    <img src="https://via.placeholder.com/80x60?text=43%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 43 Google TV">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 43&quot; Google TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳29900</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- footer -->
+                            <div class="p-3 border-top">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-semibold">Subtotal</span>
+                                    <span class="fw-bold text-danger">৳51,400</span>
+                                </div>
+                                <a href="/checkout" class="btn btn-primary w-100 btn-sm">
+                                    Go to Checkout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /cart dropdown -->
+                </div>
+        </div>
+
+    </div>
+</nav>
+
+        <!-- Offcanvas for mobile, inline from lg and up -->
+        <div class="offcanvas offcanvas-start offcanvas-lg"
+             tabindex="-1"
+             id="mainNavbarOffcanvas"
+             aria-labelledby="mainNavbarOffcanvasLabel">
+
+            <!-- Mobile-only header inside offcanvas -->
+            <div class="offcanvas-header d-lg-none">
+                <h5 class="offcanvas-title" id="mainNavbarOffcanvasLabel">Menu</h5>
+                <button type="button" class="btn-close text-reset"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">AC</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">TV Remote</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                </ul>
+
+                <!-- Search (still hidden on <md, same as before) -->
+                <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input class="form-control" type="search" placeholder="Search products…">
+                    </div>
+                </form>
+
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                    <!-- user -->
+                    <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a>
+
+                    <!-- cart dropdown -->
+                    <div class="dropdown">
+                        <button class="btn p-0 border-0 bg-transparent text-dark position-relative fs-5"
+                                id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-cart3"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                3
+                            </span>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+                            aria-labelledby="cartDropdown">
+                            <!-- header -->
+                            <div class="p-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Cart (3 items)</h6>
+                            </div>
+
+                            <!-- items -->
+                            <div class="cart-items-list">
+                                <!-- Item 1 -->
+                                <div class="d-flex align-items-center p-3">
+                                    <img src="https://via.placeholder.com/80x60?text=24%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 24 Basic">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 24&quot; Basic TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳7500</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 2 -->
+                                <div class="d-flex align-items-center p-3 border-top">
+                                    <img src="https://via.placeholder.com/80x60?text=32%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 32 Smart">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 32&quot; Smart TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳14000</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 3 -->
+                                <div class="d-flex align-items-center p-3 border-top">
+                                    <img src="https://via.placeholder.com/80x60?text=43%22" class="cart-item-thumb me-3"
+                                        alt="Pentanik 43 Google TV">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            Pentanik 43&quot; Google TV
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: 1</span>
+                                            <span class="small fw-semibold text-danger">৳29900</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- footer -->
+                            <div class="p-3 border-top">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-semibold">Subtotal</span>
+                                    <span class="fw-bold text-danger">৳51,400</span>
+                                </div>
+                                <a href="/checkout" class="btn btn-primary w-100 btn-sm">
+                                    Go to Checkout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /cart dropdown -->
+                </div>
+            </div>
+        </div>
+
+
+    <main class="container page-wrapper hero-wrapper">
+
+        <!-- HERO -->
+        <section class="mb-5">
+            <div class="row g-4 align-items-stretch">
+                <!-- Left big banner -->
+                <div class="col-lg-8">
+                    <div class="banner-card ratio ratio-16x9">
+                        <span class="banner-badge">Cricket Season Offer</span>
+                        <!-- Replace with main TV banner image -->
+                        <img src="https://via.placeholder.com/1100x620?text=Family+Watching+Cricket+on+Pentanik+TV"
+                            alt="Pentanik TV Cricket">
+                    </div>
+                </div>
+
+                <!-- Right side banners -->
+                <div class="col-lg-4 d-flex flex-column gap-4">
+                    <div class="small-banner ratio ratio-16x9">
+                        <span class="banner-badge">Live Football in 4K</span>
+                        <img src="https://via.placeholder.com/700x380?text=Football+Night+on+Big+Screen"
+                            alt="Football TV">
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <div class="small-banner ratio ratio-16x9">
+                                <img src="https://via.placeholder.com/360x240?text=Family+Entertainment+Pack"
+                                    alt="Family Pack">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="small-banner ratio ratio-16x9">
+                                <img src="https://via.placeholder.com/360x240?text=Kitchen+Appliance+Offer"
+                                    alt="Kitchen Offer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORIES -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div>
+                    <div class="category-section-title">Shop by Category</div>
+                    <h3 class="h5 fw-semibold mt-1 mb-0">Everything for your home in one place</h3>
+                </div>
+                <div class="pill-chip">
+                    <span class="pill-dot"></span> Budget friendly collections
+                </div>
+            </div>
+
+            <div class="row category-row flex-md-wrap g-3">
+                <!-- Category items -->
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=TV" class="img-fluid mb-3"
+                            alt="Television">
+                        <div class="category-name">Television</div>
+                        <small class="text-muted">24&quot; – 100&quot; smart TVs</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=AC" class="img-fluid mb-3"
+                            alt="Air Condition">
+                        <div class="category-name">Air Condition</div>
+                        <small class="text-muted">Energy saving cooling</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Touch+Board" class="img-fluid mb-3"
+                            alt="Touch Board">
+                        <div class="category-name">Touch Board</div>
+                        <small class="text-muted">Smart classroom & office</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Blender" class="img-fluid mb-3"
+                            alt="Food Blender">
+                        <div class="category-name">Food Blender</div>
+                        <small class="text-muted">Daily kitchen partner</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Fashion" class="img-fluid mb-3"
+                            alt="Fashion">
+                        <div class="category-name">Fashion</div>
+                        <small class="text-muted">Lifestyle & wearables</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Remote" class="img-fluid mb-3"
+                            alt="TV Remote">
+                        <div class="category-name">TV Remote</div>
+                        <small class="text-muted">Original & universal</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Audio" class="img-fluid mb-3"
+                            alt="Audio System">
+                        <div class="category-name">Audio System</div>
+                        <small class="text-muted">Speakers & home theater</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card text-center p-3 h-100">
+                        <img src="https://via.placeholder.com/160x90?text=Others" class="img-fluid mb-3"
+                            alt="Others">
+                        <div class="category-name">Others</div>
+                        <small class="text-muted">More electronics & gadgets</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- Regular Pentanik TV Product Section -->
+        <section class="product-section">
+            <div class="container page-wrapper">
+
+                <!-- Heading & description -->
+                <div class="text-center mb-4 mb-md-5">
+                    <h2 class="section-title mb-2">Our Regular Pentanik TV 2025</h2>
+                    <p class="section-subtitle mx-auto text-muted">
+                        Dear Customer, the collections you see under this headline are our regular TVs.
+                        These are our best selling TVs. You can enjoy a quality TV within your limited
+                        budget. These all are budget friendly collections — Pentanik 24 inch to 100 inch TV.
+                    </p>
+                </div>
+
+                <!-- Products grid -->
+                <div class="row g-4">
+                    <!-- Product 1 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <!-- Replace with real image -->
+                                <img src="https://via.placeholder.com/330x190?text=24%22+Basic+TV"
+                                    alt="Pentanik 24 Inch Basic TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 24 Inch Basic TV (Frameless)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳7500</span>
+                                <span class="price-old">৳8250</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=24%22+Smart+TV"
+                                    alt="Pentanik 24 Inch Smart TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 24 Inch Smart TV (Frameless)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳8900</span>
+                                <span class="price-old">৳9790</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=24%22+Android+TV"
+                                    alt="Pentanik 24 Inch Double Glass TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 24 Inch Double Glass TV (Android)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳9500</span>
+                                <span class="price-old">৳10450</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=32%22+Smart+TV"
+                                    alt="Pentanik 32 Inch Smart TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 32 Inch Smart TV (Frameless)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳14000</span>
+                                <span class="price-old">৳15400</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=32%22+New+Smart+TV"
+                                    alt="Pentanik 32 Inch New Smart TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 32 Inch New Smart TV (Frameless)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳15500</span>
+                                <span class="price-old">৳16900</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 6 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=43%22+Smart+TV"
+                                    alt="Pentanik 43 Inch Smart TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 43 Inch Smart TV (Frameless)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳21500</span>
+                                <span class="price-old">৳23500</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 7 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=43%22+QLED+TV"
+                                    alt="Pentanik 43 Inch QLED">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 43 Inch 4K QLED Smart TV
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳28500</span>
+                                <span class="price-old">৳30900</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 8 -->
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-badge">Save: 9%</div>
+
+                            <div class="product-image-wrapper">
+                                <img src="https://via.placeholder.com/330x190?text=43%22+Google+TV"
+                                    alt="Pentanik 43 Inch Google TV">
+                            </div>
+
+                            <div class="mt-2 flex-grow-1">
+                                <h3 class="product-title">
+                                    Pentanik 43 Inch Google TV (Android 4K)
+                                </h3>
+                            </div>
+
+                            <div class="product-divider"></div>
+
+                            <div class="product-price mb-3">
+                                <span class="price-current">৳29900</span>
+                                <span class="price-old">৳32900</span>
+                            </div>
+
+                            <button class="btn btn-product w-100">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+
+    <footer class="mt-3 pt-3 pb-4 bg-white">
+        <div
+            class="container page-wrapper d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+            <small class="text-muted">© 2025 Ponnobd Electronics. All rights reserved.</small>
+            <small class="text-muted">Powered by <span class="fw-semibold">Pentanik TV</span></small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
