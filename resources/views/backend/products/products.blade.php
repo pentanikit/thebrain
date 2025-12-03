@@ -58,77 +58,78 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Products grid</h2>
-                    <p>Lorem ipsum dolor sit amet.</p>
+                    <h2 class="content-title card-title">All Products</h2>
+                   
                 </div>
-                <div><a class="btn btn-light rounded font-md" href="#">Export</a><a
-                        class="btn btn-light rounded font-md" href="#">Import</a><a
-                        class="btn btn-primary btn-sm rounded" href="{{ route('addproducts') }}">Create new</a></div>
+                <div class="gap-16">
+                    <a class="btn btn-light rounded font-md" href="#">Export</a>
+                    <a class="btn btn-light rounded font-md" href="#">Import</a>
+                    <a class="btn btn-primary btn-sm rounded" href="{{ route('addproducts') }}">Create new</a>
+                </div>
             </div>
             <div class="card mb-4">
                 <header class="card-header">
-                    <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input class="form-control" type="text" placeholder="Search...">
-                        </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                        <select name="category_id" class="form-select">
-                            <option value="">All category</option>
+                    <form method="GET" action="{{ route('adminproducts') }}">
+                        <div class="row gx-3 align-items-center">
+                            {{-- Search --}}
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input class="form-control" type="text" name="q" value="{{ request('q') }}"
+                                    placeholder="Search by name or SKU...">
+                            </div>
 
-                            @foreach (categories() as $category)
-                                <option value="{{ $category->id }}">
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                            {{-- Category filter --}}
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select name="category_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All category</option>
+                                    @foreach (categories() as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ (string) request('category_id') === (string) $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
+                            {{-- Sort --}}
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select name="sort" class="form-select" onchange="this.form.submit()">
+                                    <option value="latest"
+                                        {{ request('sort') === 'latest' || !request('sort') ? 'selected' : '' }}>Latest
+                                        added</option>
+                                    <option value="cheap" {{ request('sort') === 'cheap' ? 'selected' : '' }}>Cheap
+                                        first</option>
+                                    <option value="expensive"{{ request('sort') === 'expensive' ? 'selected' : '' }}>
+                                        Expensive first</option>
+                                </select>
+                            </div>
+
+                            {{-- Optional explicit submit button (for search) --}}
+                            <div class="col-lg-2 col-md-3 mt-2 mt-md-0">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Filter
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
-                                <option>Latest added</option>
-                                <option>Cheap first</option>
-                                <option>Most viewed</option>
-                            </select>
-                        </div>
-                    </div>
+                    </form>
                 </header>
                 <!-- card-header end//-->
                 <div class="card-body">
                     <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
                         @forelse ($products as $item)
-                            <x-backend.admin-product-card :id="$item->id" />
+                            <x-backend.admin-product-card :product="$item" />
                         @empty
                             <p>No Products Found</p>
                         @endforelse
                     </div>
                 </div>
             </div>
-            <!-- card end//-->
+
+            {{-- Pagination --}}
             <div class="pagination-area mt-30 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i
-                                    class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
+                {{ $products->links() }}
+                {{-- or just: {{ $products->links() }} --}}
             </div>
         </section>
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> &copy;, Ecom - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">All rights reserved</div>
-                </div>
-            </div>
-        </footer>
+
     </main>
 @endsection

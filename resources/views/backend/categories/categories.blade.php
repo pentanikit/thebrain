@@ -75,14 +75,18 @@
                     <p>Add, edit or delete a category</p>
                 </div>
                 <div>
-                    <input class="form-control bg-white" type="text" placeholder="Search Categories">
+                    <input class="form-control bg-white" type="text" placeholder="Search Categories" id="categorySearch"
+                        autocomplete="off" />
+
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="{{ route('admincreatecategories') }}" method="POST"
+                            <form id="categoryCreateForm"
+                                action="{{ route('admincreatecategories') }}"
+                                method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
 
@@ -133,19 +137,35 @@
                                 {{-- Thumbnail --}}
                                 <div class="mb-4">
                                     <label class="form-label" for="thumbnail">Thumbnail</label>
-                                    <input class="form-control" type="file" id="thumbnail" name="thumbnail">
+                                    <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*">
                                     <small class="text-muted">Optional image for the category.</small>
+
+                                    {{-- Preview --}}
+                                    <div class="mt-2">
+                                        <img id="thumbnailPreview"
+                                            src="#"
+                                            alt="Thumbnail preview"
+                                            class="img-thumbnail d-none"
+                                            style="max-height: 120px;">
+                                    </div>
                                 </div>
-
-
 
                                 <div class="d-grid">
-                                    <button class="btn btn-primary" type="submit">Create category</button>
+                                    <button class="btn btn-primary d-flex align-items-center justify-content-center"
+                                            id="createCategoryBtn"
+                                            type="submit">
+                                        <span class="btn-text">Create category</span>
+                                        <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                            role="status"
+                                            aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </form>
+
                         </div>
                         <div class="col-md-9">
                             <div class="table-responsive">
+                                <?php $counter = 1; ?>
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
@@ -156,79 +176,17 @@
                                             </th>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            {{-- <th>Description</th> --}}
+                                            <th>Image</th>
+
                                             <th>Slug</th>
                                             <th>Order</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
-                                        <tbody>
-                                            @forelse (categories() as $category)
-                                                <tr>
-                                                    <td class="text-center">
-                                                        @if($category->level > 1)
-                                                            {{-- Child / subcategory indicator --}}
-                                                            <i class="material-icons md-subdirectory_arrow_right text-muted"></i>
-                                                        @else
-                                                            {{-- Main category checkbox --}}
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="{{ $category->id }}">
-                                                            </div>
-                                                        @endif
-                                                    </td>
+                                    <tbody id="categoryTableBody">
+                                        @include('backend.categories._rows', ['categories' => categories()])
 
-                                                    {{-- ID --}}
-                                                    <td>{{ $category->id }}</td>
-
-                                                    {{-- Name (with visual indent based on level) --}}
-                                                    <td>
-                                                        <b>
-                                                            {!! str_repeat('— ', max(0, $category->level - 1)) !!}
-                                                            {{ $category->name }}
-                                                        </b>
-                                                    </td>
-
-                                                    {{-- Description (no column in schema, so just mirror name) --}}
-                                                    {{-- <td>{{ $category->name }}</td> --}}
-
-                                                    {{-- Slug (styled with leading slash like your sample) --}}
-                                                    <td>/{{ $category->slug }}</td>
-
-                                                    {{-- Sort order --}}
-                                                    <td>{{ $category->sort_order }}</td>
-
-                                                    {{-- Action dropdown --}}
-                                                    <td class="text-end">
-                                                        <div class="dropdown">
-                                                            <a class="btn btn-light rounded btn-sm font-sm"
-                                                            href="#"
-                                                            data-bs-toggle="dropdown">
-                                                                <i class="material-icons md-more_horiz"></i>
-                                                            </a>
-                                                            <div class="dropdown-menu">
-                                                                {{-- Update these routes if you named them differently --}}
-                                                                <a class="dropdown-item"
-                                                                href="">
-                                                                    Edit info
-                                                                </a>
-
-                                                                <form action=""
-                                                                    method=""
-                                                                    onsubmit="return confirm('Delete this category?');">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="dropdown-item text-danger">
-                                                                        Delete
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>No Categories Found</tr>
-                                            @endforelse
-                                        </tbody>
+                                    </tbody>
 
                                 </table>
                             </div>
@@ -265,5 +223,89 @@ document.getElementById('name').addEventListener('input', function () {
             .replace(/-+/g, '-');
     }
 });
+
+// Live category search with debounce
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('categorySearch');
+    const tableBody   = document.getElementById('categoryTableBody');
+    let timer = null;
+
+    if (!searchInput || !tableBody) return;
+
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(timer);
+
+        timer = setTimeout(function () {
+            const query = searchInput.value.trim();
+
+            fetch("{{ route('categorysearch') }}?q=" + encodeURIComponent(query), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.text())
+                .then(html => {
+                    tableBody.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error('Search error:', err);
+                });
+        }, 300); // 300ms delay after user stops typing
+    });
+});
+
+
+
+// Spinner on submit + prevent double submit
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('categoryCreateForm');
+    const btn  = document.getElementById('createCategoryBtn');
+
+    if (form && btn) {
+        const btnText  = btn.querySelector('.btn-text');
+        const spinner  = btn.querySelector('.spinner-border');
+
+        form.addEventListener('submit', function () {
+            btn.disabled = true;
+            if (spinner) spinner.classList.remove('d-none');
+            if (btnText) btnText.textContent = 'Creating...';
+        });
+    }
+
+    // Image preview
+    const fileInput = document.getElementById('thumbnail');
+    const preview   = document.getElementById('thumbnailPreview');
+
+    if (fileInput && preview) {
+        fileInput.addEventListener('change', function () {
+            const file = this.files && this.files[0];
+
+            if (!file) {
+                preview.src = '#';
+                preview.classList.add('d-none');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                // Not an image – reset & optionally show a warning
+                preview.src = '#';
+                preview.classList.add('d-none');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
+
+
+
+
 </script>
 @endpush
+

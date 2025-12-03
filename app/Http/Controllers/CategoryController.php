@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -22,6 +23,23 @@ class CategoryController extends Controller
     public function create()
     {
         //
+    }
+
+
+    public function children($parentId)
+    {
+        // use your existing helper
+        $children = categories((int) $parentId);
+
+        // return minimal JSON
+        return response()->json(
+            $children->map(function ($cat) {
+                return [
+                    'id'   => $cat->id,
+                    'name' => $cat->name,
+                ];
+            })
+        );
     }
 
     /**
@@ -67,7 +85,7 @@ class CategoryController extends Controller
         Category::create($data);
 
         return redirect()
-            ->route('categories.create')
+            ->back()
             ->with('success', 'Category created successfully.');
     }
 
@@ -95,11 +113,43 @@ class CategoryController extends Controller
         //
     }
 
+
+    public function search(Request $request)
+    {
+        $q = trim($request->get('q', ''));
+
+        $categories = Category::query()
+            ->when($q, function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                      ->orWhere('slug', 'like', "%{$q}%");
+            })
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        // Return ONLY the rows (HTML) so JS can drop it into <tbody>
+        return view('backend.categories._rows', compact('categories'))->render();
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Category $category)
     {
-        //
+        // If the category has an image, delete it from the disk
+        if (!empty($category->thumbnail)) {
+            // using 'public' disk (storage/app/public)
+            if (Storage::disk('public')->exists($category->thumbnail)) {
+                Storage::disk('public')->delete($category->thumbnail);
+            }
+        }
+
+        // Finally delete the category record
+        $category->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Category deleted successfully!');
     }
 }

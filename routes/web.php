@@ -21,8 +21,20 @@ Route::prefix('admin')->group(function(){
     Route::prefix('products')->group(function(){
         Route::get('/', [ProductController::class, 'index'])->name('adminproducts');
         Route::get('add', [ProductController::class, 'create'])->name('addproducts');
+        Route::post('create', [ProductController::class, 'store'])->name('createproduct');
+        Route::get('edit/{product}', [ProductController::class, 'edit'])->name('editproduct');
+        Route::post('update', [ProductController::class, 'update'])->name('updateproduct');
+    });
+
+    Route::prefix('categories')->group(function(){
+        Route::get('/', [CategoryController::class, 'index'])->name('admincategories');
+        Route::post('create', [CategoryController::class, 'store'])->name('admincreatecategories');
+        Route::delete('delete/{category}', [CategoryController::class, 'destroy'])->name('deletecategory');
+        Route::get('search', [CategoryController::class, 'search'])->name('categorysearch');
+        
+        Route::get('/{parent}/children', [CategoryController::class, 'children'])->name('categorieschildren');
+
     });
    
-    Route::get('categories', [CategoryController::class, 'index'])->name('admincategories');
-    Route::post('categories/create', [CategoryController::class, 'store'])->name('admincreatecategories');
+
 });

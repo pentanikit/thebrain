@@ -1,5 +1,7 @@
 @extends('frontend.layout')
 @section('pages')
+
+        <x-frontend.hero />
             <!-- Regular Pentanik TV Product Section -->
         <section class="product-section">
             <div class="container page-wrapper">

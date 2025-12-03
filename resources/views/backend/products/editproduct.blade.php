@@ -1,6 +1,6 @@
 @extends('backend.layout')
 @section('admin')
-       <main class="main-wrap">
+    <main class="main-wrap">
       <header class="main-header navbar">
         <div class="col-search">
           <form class="searchform">
@@ -23,28 +23,49 @@
             <li class="nav-item"><a class="nav-link btn-icon darkmode" href="#"><i class="material-icons md-nights_stay"></i></a></li>
             <li class="nav-item"><a class="requestfullscreen nav-link btn-icon" href="#"><i class="material-icons md-cast"></i></a></li>
             <li class="dropdown nav-item"><a class="dropdown-toggle" id="dropdownLanguage" data-bs-toggle="dropdown" href="#" aria-expanded="false"><i class="material-icons md-public"></i></a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage"><a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English">English</a><a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français">Fran&ccedil;ais</a><a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="Français">&#x65E5;&#x672C;&#x8A9E;</a><a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="Français">&#x4E2D;&#x56FD;&#x4EBA;</a></div>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                  <a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English">English</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="日本語">日本語</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="中国人">中国人</a>
+              </div>
             </li>
             <li class="dropdown nav-item"><a class="dropdown-toggle" id="dropdownAccount" data-bs-toggle="dropdown" href="#" aria-expanded="false"><img class="img-xs rounded-circle" src="assets/imgs/people/avatar2.jpg" alt="User"></a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount"><a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a><a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a><a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a><a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a><a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                  <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                 <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
               </div>
             </li>
           </ul>
         </div>
       </header>
+
+      @php
+          // for stock status
+          $stockStatus = old('stock_status', $product->stock_status ?? 'in_stock');
+          // for category selects
+          $oldCategoryId      = old('category_id', $product->category_id ?? null);
+          $oldSubCategoryId   = old('sub_category_id', $product->sub_category_id ?? null);
+          $oldChildCategoryId = old('child_category_id', $product->child_category_id ?? null);
+          $parentCategories   = categories();
+      @endphp
+
       <section class="content-main">
           <form id="productForm"
-                action="{{ route('createproduct') }}"
+                action="" {{-- change route name if needed --}}
                 method="POST"
                 enctype="multipart/form-data">
               @csrf
+              @method('PUT')
 
               <div class="row">
                   <div class="col-9">
                       <div class="content-header d-flex justify-content-between align-items-center">
-                          <h2 class="content-title">Add New Product</h2>
-
+                          <h2 class="content-title">Edit Product</h2>
                       </div>
                   </div>
 
@@ -63,7 +84,7 @@
                                           id="name"
                                           name="name"
                                           type="text"
-                                          value="{{ old('name') }}"
+                                          value="{{ old('name', $product->name ?? '') }}"
                                           placeholder="Type here">
                                   @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                               </div>
@@ -75,7 +96,7 @@
                                           id="slug"
                                           name="slug"
                                           type="text"
-                                          value="{{ old('slug') }}"
+                                          value="{{ old('slug', $product->slug ?? '') }}"
                                           placeholder="Auto from title (editable)">
                                   <small class="text-muted">Leave empty to auto-generate from title.</small>
                                   @error('slug') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -88,19 +109,19 @@
                                           id="sku"
                                           name="sku"
                                           type="text"
-                                          value="{{ old('sku') }}"
+                                          value="{{ old('sku', $product->sku ?? '') }}"
                                           placeholder="Optional product code">
                                   @error('sku') <div class="invalid-feedback">{{ $message }}</div> @enderror
                               </div>
 
-                              {{-- Full Description (goes to product_descriptions.body) --}}
+                              {{-- Full Description --}}
                               <div class="mb-4">
                                   <label class="form-label" for="description">Full description</label>
                                   <textarea class="form-control @error('description') is-invalid @enderror"
                                             id="description"
                                             name="description"
                                             rows="4"
-                                            placeholder="Type product details here...">{{ old('description') }}</textarea>
+                                            placeholder="Type product details here...">{{ old('description', optional($product->descriptions)->body ?? $product->descriptions[0]->body ?? '') }}</textarea>
                                   @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                               </div>
 
@@ -112,7 +133,7 @@
                                           <input  class="form-control @error('price') is-invalid @enderror"
                                                   id="price"
                                                   name="price"
-                                                  value="{{ old('price') }}"
+                                                  value="{{ old('price', $product->price ?? '') }}"
                                                   placeholder="BDT"
                                                   type="number"
                                                   min="0">
@@ -125,7 +146,7 @@
                                           <input  class="form-control @error('old_price') is-invalid @enderror"
                                                   id="old_price"
                                                   name="old_price"
-                                                  value="{{ old('old_price') }}"
+                                                  value="{{ old('old_price', $product->old_price ?? '') }}"
                                                   placeholder="BDT"
                                                   type="number"
                                                   min="0">
@@ -138,7 +159,7 @@
                                           <input  class="form-control @error('offer_price') is-invalid @enderror"
                                                   id="offer_price"
                                                   name="offer_price"
-                                                  value="{{ old('offer_price') }}"
+                                                  value="{{ old('offer_price', $product->offer_price ?? '') }}"
                                                   placeholder="BDT"
                                                   type="number"
                                                   min="0">
@@ -157,7 +178,7 @@
                                                   name="stock_quantity"
                                                   type="number"
                                                   min="0"
-                                                  value="{{ old('stock_quantity', 0) }}">
+                                                  value="{{ old('stock_quantity', $product->stock_quantity ?? 0) }}">
                                           @error('stock_quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                       </div>
                                   </div>
@@ -167,16 +188,16 @@
                                           <select class="form-select @error('stock_status') is-invalid @enderror"
                                                   id="stock_status"
                                                   name="stock_status">
-                                              <option value="in_stock" {{ old('stock_status') == 'in_stock' ? 'selected' : '' }}>In stock</option>
-                                              <option value="out_of_stock" {{ old('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of stock</option>
-                                              <option value="preorder" {{ old('stock_status') == 'preorder' ? 'selected' : '' }}>Pre-order</option>
+                                              <option value="in_stock"    {{ $stockStatus === 'in_stock' ? 'selected' : '' }}>In stock</option>
+                                              <option value="out_of_stock" {{ $stockStatus === 'out_of_stock' ? 'selected' : '' }}>Out of stock</option>
+                                              <option value="preorder"    {{ $stockStatus === 'preorder' ? 'selected' : '' }}>Pre-order</option>
                                           </select>
                                           @error('stock_status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                       </div>
                                   </div>
                               </div>
 
-                              {{-- Active / Draft toggle (backed by action hidden field actually) --}}
+                              {{-- Active / Draft note (logic via hidden action + JS same as add) --}}
                               <div class="form-check mb-2">
                                   <input class="form-check-input"
                                         type="checkbox"
@@ -184,7 +205,7 @@
                                         checked
                                         disabled>
                                   <label class="form-check-label" for="activeCheckbox">
-                                      Publish immediately (uncheck by pressing "Save to draft")
+                                      Update product as publish/draft using buttons below
                                   </label>
                               </div>
                               <small class="text-muted">
@@ -193,48 +214,87 @@
                           </div>
                       </div>
 
-                      {{-- SPECIFICATIONS (stored as JSON in product_specifications.value) --}}
-                      <div class="card mb-4">
-                          <div class="card-header d-flex justify-content-between align-items-center">
-                              <h4>Specifications</h4>
-                              <button type="button" id="addSpecRow" class="btn btn-sm btn-outline-primary">
-                                  + Add row
-                              </button>
-                          </div>
-                          <div class="card-body">
-                              <div id="specRows">
-                                  {{-- one empty row by default --}}
-                                  @php
-                                      $oldSpecKeys = old('spec_key', []);
-                                      $oldSpecValues = old('spec_value', []);
-                                      $specCount = max(count($oldSpecKeys), 1);
-                                  @endphp
+                      {{-- SPECIFICATIONS (keep same as your add form for now) --}}
+                    {{-- SPECIFICATIONS --}}
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4>Specifications</h4>
+                            <button type="button" id="addSpecRow" class="btn btn-sm btn-outline-primary">
+                                + Add row
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            @php
+                                $specRows = [];
 
-                                  @for ($i = 0; $i < $specCount; $i++)
-                                      <div class="row g-2 align-items-center mb-2 spec-row">
-                                          <div class="col-md-4">
-                                              <input type="text"
-                                                    name="spec_key[]"
-                                                    class="form-control"
-                                                    placeholder="Key (e.g. Screen Size)"
-                                                    value="{{ $oldSpecKeys[$i] ?? '' }}">
-                                          </div>
-                                          <div class="col-md-7">
-                                              <input type="text"
-                                                    name="spec_value[]"
-                                                    class="form-control"
-                                                    placeholder="Value (e.g. 43 inch)"
-                                                    value="{{ $oldSpecValues[$i] ?? '' }}">
-                                          </div>
-                                          <div class="col-md-1 text-end">
-                                              <button type="button" class="btn btn-sm btn-outline-danger removeSpecRow">&times;</button>
-                                          </div>
-                                      </div>
-                                  @endfor
-                              </div>
-                              <small class="text-muted">These will be stored as a JSON list of key → value pairs.</small>
-                          </div>
-                      </div>
+                                // 1) If validation failed and came back, use old() from the form
+                                if (old('spec_key')) {
+                                    $keys = old('spec_key');
+                                    $vals = old('spec_value');
+
+                                    foreach ($keys as $idx => $k) {
+                                        $specRows[] = [
+                                            'key'   => $k,
+                                            'value' => $vals[$idx] ?? '',
+                                        ];
+                                    }
+                                }
+                                // 2) Otherwise, use DB JSON from $product->specification->specs
+                                elseif ($product->relationLoaded('specification') && $product->specification) {
+                                    $specs = $product->specification->specs; // because of $casts = ['specs' => 'array']
+
+                                    // if not casted for any reason, make sure it's array
+                                    if (is_string($specs)) {
+                                        $specs = json_decode($specs, true) ?: [];
+                                    }
+
+                                    if (is_array($specs)) {
+                                        foreach ($specs as $item) {
+                                            $specRows[] = [
+                                                'key'   => $item['key']   ?? '',
+                                                'value' => $item['value'] ?? '',
+                                            ];
+                                        }
+                                    }
+                                }
+
+                                // 3) If still empty (no specs + no old input), show one blank row
+                                if (!count($specRows)) {
+                                    $specRows[] = ['key' => '', 'value' => ''];
+                                }
+                            @endphp
+
+                            <div id="specRows">
+                                @foreach ($specRows as $row)
+                                    <div class="row g-2 align-items-center mb-2 spec-row">
+                                        <div class="col-md-4">
+                                            <input type="text"
+                                                name="spec_key[]"
+                                                class="form-control"
+                                                placeholder="Key (e.g. gsm)"
+                                                value="{{ $row['key'] }}">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input type="text"
+                                                name="spec_value[]"
+                                                class="form-control"
+                                                placeholder="Value (e.g. 80)"
+                                                value="{{ $row['value'] }}">
+                                        </div>
+                                        <div class="col-md-1 text-end">
+                                            <button type="button" class="btn btn-sm btn-outline-danger removeSpecRow">&times;</button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <small class="text-muted">
+                                These will be stored as a JSON array like:
+                                <code>[{"key":"gsm","value":"80"}]</code>
+                            </small>
+                        </div>
+                    </div>
+
                   </div>
 
                   {{-- RIGHT SIDE --}}
@@ -248,6 +308,17 @@
                               {{-- Thumbnail --}}
                               <div class="mb-3">
                                   <label class="form-label" for="thumbnail">Thumbnail (main image)</label>
+
+                                  @if(!empty($product->thumbnail))
+                                      <div class="mb-2">
+                                          <small class="text-muted d-block">Current thumbnail:</small>
+                                          <img src="{{ asset('storage/'.$product->thumbnail) }}"
+                                               alt="Current thumbnail"
+                                               class="img-thumbnail"
+                                               style="max-height: 120px;">
+                                      </div>
+                                  @endif
+
                                   <div class="input-upload">
                                       <img src="{{ asset('assets/imgs/theme/upload.svg') }}" alt="">
                                       <input  class="form-control @error('thumbnail') is-invalid @enderror"
@@ -258,87 +329,96 @@
                                       @error('thumbnail') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                   </div>
                                   <div id="thumbnailPreview" class="mt-2"></div>
+                                  <small class="text-muted d-block">Leave empty to keep existing thumbnail.</small>
                               </div>
 
                               {{-- Gallery images --}}
-                              <div class="mb-3">
-                                  <label class="form-label" for="images">Gallery images</label>
-                                  <input  class="form-control @error('images.*') is-invalid @enderror"
-                                          id="images"
-                                          name="images[]"
-                                          type="file"
-                                          multiple
-                                          accept="image/*">
-                                  @error('images.*') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
-                                  <div id="imagePreview" class="d-flex flex-wrap gap-2 mt-2"></div>
-                                  <small class="text-muted">You can select multiple images.</small>
-                              </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="images">Gallery images</label>
+
+                                @if($product->relationLoaded('images') && $product->images->count())
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        @foreach($product->images as $img)
+                                            <img src="{{ asset('storage/'.$img->path) }}"
+                                                alt="Gallery image"
+                                                class="img-thumbnail"
+                                                style="height: 70px;">
+                                        @endforeach
+                                    </div>
+                                    <small class="text-muted d-block mb-1">Existing gallery images shown above.</small>
+                                @endif
+
+                                <input  class="form-control @error('images.*') is-invalid @enderror"
+                                        id="images"
+                                        name="images[]"
+                                        type="file"
+                                        multiple
+                                        accept="image/*">
+                                @error('images.*') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+
+                                <div id="imagePreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+                                <small class="text-muted">You can select multiple images. New uploads will be handled in update().</small>
+                            </div>
+
                           </div>
                       </div>
 
                       {{-- ORGANIZATION --}}
-                  <div class="card mb-4">
-                      <div class="card-header">
-                          <h4>Organization</h4>
-                      </div>
-                      <div class="card-body">
-                          <div class="row gx-2">
-                              @php
-                                  $parentCategories   = categories(); // only parent categories
-                                  $oldCategoryId      = old('category_id');
-                                  $oldSubCategoryId   = old('sub_category_id');
-                                  $oldChildCategoryId = old('child_category_id');
-                              @endphp
+                      <div class="card mb-4">
+                          <div class="card-header">
+                              <h4>Organization</h4>
+                          </div>
+                          <div class="card-body">
+                              <div class="row gx-2">
+                                  {{-- Category (parent) --}}
+                                  <div class="col-12 mb-3">
+                                      <label class="form-label" for="category_id">Category</label>
+                                      <select class="form-select @error('category_id') is-invalid @enderror"
+                                              id="category_id"
+                                              name="category_id"
+                                              data-old="{{ $oldCategoryId }}">
+                                          <option value="">Select category</option>
+                                          @foreach ($parentCategories as $cat)
+                                              <option value="{{ $cat->id }}"
+                                                  {{ (string)$oldCategoryId === (string)$cat->id ? 'selected' : '' }}>
+                                                  {{ $cat->name }}
+                                              </option>
+                                          @endforeach
+                                      </select>
+                                      @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                  </div>
 
-                              {{-- Category (parent) --}}
-                              <div class="col-12 mb-3">
-                                  <label class="form-label" for="category_id">Category</label>
-                                  <select class="form-select @error('category_id') is-invalid @enderror"
-                                          id="category_id"
-                                          name="category_id"
-                                          data-old="{{ $oldCategoryId }}">
-                                      <option value="">Select category</option>
-                                      @foreach ($parentCategories as $cat)
-                                          <option value="{{ $cat->id }}"
-                                              {{ $oldCategoryId == $cat->id ? 'selected' : '' }}>
-                                              {{ $cat->name }}
-                                          </option>
-                                      @endforeach
-                                  </select>
-                                  @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                              </div>
+                                  {{-- Sub-category --}}
+                                  <div class="col-12 mb-3">
+                                      <label class="form-label" for="sub_category_id">Sub-category</label>
+                                      <select class="form-select @error('sub_category_id') is-invalid @enderror"
+                                              id="sub_category_id"
+                                              name="sub_category_id"
+                                              data-old="{{ $oldSubCategoryId }}">
+                                          <option value="">Select sub-category (optional)</option>
+                                          {{-- options will be loaded by JS --}}
+                                      </select>
+                                      @error('sub_category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                  </div>
 
-                              {{-- Sub-category (depends on category) --}}
-                              <div class="col-12 mb-3">
-                                  <label class="form-label" for="sub_category_id">Sub-category</label>
-                                  <select class="form-select @error('sub_category_id') is-invalid @enderror"
-                                          id="sub_category_id"
-                                          name="sub_category_id"
-                                          data-old="{{ $oldSubCategoryId }}">
-                                      <option value="">Select sub-category (optional)</option>
-                                      {{-- options will be loaded by JS --}}
-                                  </select>
-                                  @error('sub_category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                              </div>
-
-                              {{-- Child-category (depends on sub OR parent) --}}
-                              <div class="col-12 mb-3">
-                                  <label class="form-label" for="child_category_id">Child-category</label>
-                                  <select class="form-select @error('child_category_id') is-invalid @enderror"
-                                          id="child_category_id"
-                                          name="child_category_id"
-                                          data-old="{{ $oldChildCategoryId }}">
-                                      <option value="">Select child-category (optional)</option>
-                                      {{-- options will be loaded by JS --}}
-                                  </select>
-                                  @error('child_category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                  {{-- Child-category --}}
+                                  <div class="col-12 mb-3">
+                                      <label class="form-label" for="child_category_id">Child-category</label>
+                                      <select class="form-select @error('child_category_id') is-invalid @enderror"
+                                              id="child_category_id"
+                                              name="child_category_id"
+                                              data-old="{{ $oldChildCategoryId }}">
+                                          <option value="">Select child-category (optional)</option>
+                                          {{-- options will be loaded by JS --}}
+                                      </select>
+                                      @error('child_category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                  </div>
                               </div>
                           </div>
                       </div>
-                  </div>
-
-
                   </div> {{-- /RIGHT --}}
+
+                  {{-- ACTION BUTTONS --}}
                   <div>
                       <input type="hidden" name="action" id="formAction" value="publish">
 
@@ -364,7 +444,6 @@
 
     </main>
 @endsection
-
 @push('scripts')
 <script>
     // === Auto slug from title ===

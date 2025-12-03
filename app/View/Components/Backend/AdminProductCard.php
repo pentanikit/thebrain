@@ -13,9 +13,9 @@ class AdminProductCard extends Component
      * Create a new component instance.
      */
     public $product;
-    public function __construct($id)
+    public function __construct(Product $product)
     {
-        $this->product = Product::with(['images', 'specifications', 'descriptions', 'category', 'subCategory'])->latest()->paginate(20);
+        $this->product = $product->load(['images', 'category', 'subCategory']);
     }
 
     /**
