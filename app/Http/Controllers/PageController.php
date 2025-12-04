@@ -12,7 +12,9 @@ class PageController extends Controller
     }
 
 
-
+    public function banners(){
+        return view('backend.banners.banner-upload');
+    }
 
     //Admin Router
     public function dashboard(){

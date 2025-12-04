@@ -19,6 +19,10 @@
                         <a href="{{ route('admincategories') }}">Categories</a>
                     </div>
                 </li>
+                <li class="menu-item">
+                        <a href="{{ route('banners') }}" class="menu-link"><i
+                            class="icon material-icons md-image"></i>Banners</a>
+                </li>
                 <li class="menu-item has-submenu"><a class="menu-link" href="page-orders-1.html"><i
                             class="icon material-icons md-shopping_cart"></i><span class="text">Orders</span></a>
                     <div class="submenu"><a href="page-orders-1.html">Order list 1</a><a href="page-orders-2.html">Order

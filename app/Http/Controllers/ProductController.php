@@ -9,6 +9,7 @@ use App\Models\ProductDescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -225,7 +226,149 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // === Build validation rules ===
+        $rules = [
+            'name'              => ['required', 'string', 'max:255'],
+            'description'       => ['nullable', 'string'],
+
+            'price'             => ['required', 'integer', 'min:0'],
+            'old_price'         => ['nullable', 'integer', 'min:0'],
+            'offer_price'       => ['nullable', 'integer', 'min:0'],
+
+            'stock_quantity'    => ['required', 'integer', 'min:0'],
+            'stock_status'      => ['required', 'in:in_stock,out_of_stock,preorder'],
+
+            'category_id'       => ['required', 'exists:categories,id'],
+            'sub_category_id'   => ['nullable', 'exists:categories,id'],
+            'child_category_id' => ['nullable', 'exists:categories,id'],
+
+            'thumbnail'         => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'images.*'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+
+            'spec_key.*'        => ['nullable', 'string', 'max:255'],
+            'spec_value.*'      => ['nullable', 'string', 'max:255'],
+
+            'action'            => ['required', 'in:publish,draft'],
+        ];
+
+        // slug & sku basic rules
+        $rules['slug'] = ['nullable', 'string', 'max:255'];
+        $rules['sku']  = ['nullable', 'string', 'max:255'];
+
+        // Only check UNIQUE if value actually changed
+        if ($request->filled('slug') && $request->slug !== $product->slug) {
+            $rules['slug'][] = Rule::unique('products', 'slug');
+        }
+
+        if ($request->filled('sku') && $request->sku !== $product->sku) {
+            $rules['sku'][] = Rule::unique('products', 'sku');
+        }
+
+        $validated = $request->validate($rules);
+
+        // === Generate slug if empty ===
+        if (empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['name']);
+        }
+
+        // === Active / Draft ===
+        $isActive = $validated['action'] === 'publish';
+        unset($validated['action']);
+
+        // === Thumbnail upload ===
+        if ($request->hasFile('thumbnail')) {
+            if (!empty($product->thumbnail)) {
+                Storage::disk('public')->delete($product->thumbnail);
+            }
+
+            $validated['thumbnail'] = $request->file('thumbnail')
+                ->store('products/thumbnails', 'public');
+        }
+
+        // === Only update changed fields ===
+        $product->fill([
+            'name'              => $validated['name'],
+            'slug'              => $validated['slug'] ?? $product->slug,
+            'sku'               => $validated['sku'] ?? $product->sku,
+            'price'             => $validated['price'],
+            'old_price'         => $validated['old_price'] ?? null,
+            'offer_price'       => $validated['offer_price'] ?? null,
+            'stock_quantity'    => $validated['stock_quantity'],
+            'stock_status'      => $validated['stock_status'],
+            'thumbnail'         => $validated['thumbnail'] ?? $product->thumbnail,
+            'category_id'       => $validated['category_id'],
+            'sub_category_id'   => $validated['sub_category_id'] ?? null,
+            'child_category_id' => $validated['child_category_id'] ?? null,
+            'is_active'         => $isActive,
+        ]);
+
+        // This automatically only updates dirty (changed) attributes
+        $product->save();
+
+        // === Description table (product_descriptions) ===
+        // assumes: $product->descriptions() -> hasOne or hasMany with `body` column
+        $descriptionText = $validated['description'] ?? null;
+
+        if ($descriptionText !== null) {
+            $product->descriptions()->updateOrCreate(
+                ['product_id' => $product->id],
+                ['body' => $descriptionText]
+            );
+        }
+
+        // === Specifications JSON (e.g. product_specifications.specs) ===
+        // From spec_key[] and spec_value[]
+        $keys   = $request->input('spec_key', []);
+        $values = $request->input('spec_value', []);
+        $specs  = [];
+
+        foreach ($keys as $index => $key) {
+            $key   = trim($key ?? '');
+            $value = trim($values[$index] ?? '');
+
+            // Skip completely empty rows
+            if ($key === '' && $value === '') {
+                continue;
+            }
+
+            $specs[] = [
+                'key'   => $key,
+                'value' => $value,
+            ];
+        }
+
+        // assumes: $product->specifications() -> hasOne(ProductSpecification::class)
+        // and ProductSpecification has `specs` JSON column with cast ['specs' => 'array']
+        if (count($specs)) {
+            $product->specifications()->updateOrCreate(
+                ['product_id' => $product->id],
+                ['value' => $specs]
+            );
+        } else {
+            // if you want to delete specs when everything is empty:
+            $product->specifications()->delete();
+        }
+
+        // === Gallery images (product_images table) ===
+        // assumes: $product->images() -> hasMany(ProductImage::class) with `path` column
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                if (!$file) {
+                    continue;
+                }
+
+                $path = $file->store('products/gallery', 'public');
+
+                $product->images()->create([
+                    'path' => $path,
+                ]);
+            }
+        }
+
+        // === Redirect back ===
+        return redirect()
+            ->back() // change if your index route name is different
+            ->with('success', 'Product updated successfully.');
     }
 
     /**

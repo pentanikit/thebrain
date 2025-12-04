@@ -246,10 +246,10 @@
         }
 
         .product-image-wrapper img {
-            max-height: 160px;
-            width: auto;
-            max-width: 100%;
-            object-fit: contain;
+            max-height: 360px;
+            border-radius: 5%;
+            width: 100%;
+            object-fit: cover;
         }
 
         .product-title {

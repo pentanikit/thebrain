@@ -44,6 +44,19 @@
         </div>
       </header>
 
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
       @php
           // for stock status
           $stockStatus = old('stock_status', $product->stock_status ?? 'in_stock');
@@ -56,11 +69,11 @@
 
       <section class="content-main">
           <form id="productForm"
-                action="" {{-- change route name if needed --}}
+                action="{{ route('updateproduct', $product->id) }}" {{-- change route name if needed --}}
                 method="POST"
                 enctype="multipart/form-data">
               @csrf
-              @method('PUT')
+              
 
               <div class="row">
                   <div class="col-9">
@@ -240,8 +253,8 @@
                                     }
                                 }
                                 // 2) Otherwise, use DB JSON from $product->specification->specs
-                                elseif ($product->relationLoaded('specification') && $product->specification) {
-                                    $specs = $product->specification->specs; // because of $casts = ['specs' => 'array']
+                                elseif ($product->relationLoaded('specifications') && $product->specifications) {
+                                    $specs = $product->specifications; // because of $casts = ['specs' => 'array']
 
                                     // if not casted for any reason, make sure it's array
                                     if (is_string($specs)) {

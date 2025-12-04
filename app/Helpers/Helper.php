@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Banners;
+use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('categories')) {
     /**
@@ -66,14 +68,7 @@ if (! function_exists('bn_digits')) {
 }
 
 if (! function_exists('currency')) {
-    /**
-     * Format amount in Bangladeshi Taka for the whole application.
-     *
-     * Usage:
-     *  currency(12500);                           // ৳ 12,500
-     *  currency(12500, options: ['bn' => true]);  // ৳ ১২,৫০০
-     *  currency(12500, options: ['label' => true]); // 12,500 টাকা
-     */
+
     function currency($amount, ?string $currency = null, array $options = []): string
     {
         if ($amount === null) {
@@ -116,4 +111,53 @@ if (! function_exists('currency')) {
 
         return $symbol . ' ' . $formatted;      // e.g. "৳ 12,500"
     }
+
+if (! function_exists('banner_path')) {
+    function banner_path(string $key): ?string
+    {
+        $banner = Banners::where('key', $key)->first();
+
+        return $banner && $banner->value ? $banner->value : null;
+    }
+}
+
+
+if (! function_exists('banner_url')) {
+    function banner_url(string $key, ?string $default = null): ?string
+    {
+        $path = banner_path($key);
+
+        if (! $path) {
+            return $default;
+        }
+
+        return Storage::disk('public')->url($path);
+    }
+}
+
+
+if (! function_exists('banner_urls')) {
+    function banner_urls(array $keys): array
+    {
+        $paths = Banners::whereIn('key', $keys)
+            ->pluck('value', 'key')
+            ->toArray();
+
+        $urls = [];
+        foreach ($paths as $key => $path) {
+            $urls[$key] = $path
+                ? Storage::disk('public')->url($path)
+                : null;
+        }
+
+       
+        foreach ($keys as $key) {
+            if (! array_key_exists($key, $urls)) {
+                $urls[$key] = null;
+            }
+        }
+
+        return $urls;
+    }
+}
 }

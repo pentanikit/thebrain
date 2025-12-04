@@ -4,10 +4,15 @@
                 <!-- Left big banner -->
                 <div class="col-lg-8">
                     <div class="banner-card ratio ratio-16x9">
-                        <span class="banner-badge">Cricket Season Offer</span>
+                        <span class="banner-badge">Latest Design Caps</span>
                         <!-- Replace with main TV banner image -->
-                        <img src="https://via.placeholder.com/1100x620?text=Family+Watching+Cricket+on+Pentanik+TV"
-                            alt="Pentanik TV Cricket">
+                            @if (banner_url('banner_1'))
+                                <img src="{{ banner_url('banner_1') }}" alt="Hero Banner 1" class="img-fluid">
+                            @else
+                                <div class="placeholder-banner text-muted d-flex align-items-center justify-content-center">
+                                    No banner uploaded
+                                </div>
+                            @endif
                     </div>
                 </div>
 
@@ -15,21 +20,36 @@
                 <div class="col-lg-4 d-flex flex-column gap-4">
                     <div class="small-banner ratio ratio-16x9">
                         <span class="banner-badge">Live Football in 4K</span>
-                        <img src="https://via.placeholder.com/700x380?text=Football+Night+on+Big+Screen"
-                            alt="Football TV">
+                            @if (banner_url('banner_2'))
+                                <img src="{{ banner_url('banner_2') }}" alt="Hero Banner 2" class="img-fluid">
+                            @else
+                                <div class="placeholder-banner text-muted d-flex align-items-center justify-content-center">
+                                    No banner uploaded
+                                </div>
+                            @endif
                     </div>
 
                     <div class="row g-4">
                         <div class="col-6">
                             <div class="small-banner ratio ratio-16x9">
-                                <img src="https://via.placeholder.com/360x240?text=Family+Entertainment+Pack"
-                                    alt="Family Pack">
+                            @if (banner_url('banner_3'))
+                                <img src="{{ banner_url('banner_3') }}" alt="Hero Banner 3" class="img-fluid">
+                            @else
+                                <div class="placeholder-banner text-muted d-flex align-items-center justify-content-center">
+                                    No banner uploaded
+                                </div>
+                            @endif
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="small-banner ratio ratio-16x9">
-                                <img src="https://via.placeholder.com/360x240?text=Kitchen+Appliance+Offer"
-                                    alt="Kitchen Offer">
+                            @if (banner_url('banner_4'))
+                                <img src="{{ banner_url('banner_4') }}" alt="Hero Banner 4" class="img-fluid">
+                            @else
+                                <div class="placeholder-banner text-muted d-flex align-items-center justify-content-center">
+                                    No banner uploaded
+                                </div>
+                            @endif
                             </div>
                         </div>
                     </div>

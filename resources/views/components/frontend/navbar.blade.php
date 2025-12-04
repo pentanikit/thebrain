@@ -2,7 +2,7 @@
     <div class="container page-wrapper">
         <a class="navbar-brand d-flex align-items-center" href="#">
             <!-- Logo -->
-            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="Ponnobd">
+            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="The Brain">
         </a>
 
         <!-- Toggler now opens OFFCANVAS -->
@@ -17,11 +17,11 @@
 
         <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">AC</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">TV Remote</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    @foreach (categories() as $item)
+                        <li class="nav-item"><a class="nav-link" href="#">{{ $item->name }}</a></li>
+                    @endforeach
+                    
+                
                 </ul>
                                 <!-- Search (still hidden on <md, same as before) -->
                 <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">

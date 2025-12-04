@@ -1,27 +1,45 @@
                     <!-- Product 1 -->
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product-card h-100 d-flex flex-column">
-                            <div class="product-badge">Save: 9%</div>
+                    @forelse ($products as $item)
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="product-card h-100 d-flex flex-column">
+                            @php 
+                                    $reg = $item->price;
+                                    $offer = $item->offer_price;
+                                    $discount = 0;
 
-                            <div class="product-image-wrapper">
-                                <!-- Replace with real image -->
-                                <img src="https://via.placeholder.com/330x190?text=24%22+Basic+TV"
-                                    alt="Pentanik 24 Inch Basic TV">
+                                    // Only calculate if regular price is greater than 0
+                                    if ($reg > 0 && $offer < $reg) {
+                                        $discount = round((($reg - $offer) / $reg) * 100);
+                                    }
+                                @endphp
+
+                                {{-- Only show the badge if there is a discount greater than 0 --}}
+                                @if($discount > 0)
+                                    <div class="product-badge">Save: {{ $discount }}%</div>
+                                @endif
+
+                               
+                                    <!-- Replace with real image -->
+                                    <img src="{{ asset('storage').'/'.$item->thumbnail }}"
+                                        alt="{{ $item->name }}" style="object-fit: cover; border-radius: 5%;" >
+                               
+
+                                <div class="mt-2 flex-grow-1">
+                                    <h3 class="product-title">
+                                        {{ $item->name }}
+                                    </h3>
+                                </div>
+
+                                <div class="product-divider"></div>
+
+                                <div class="product-price mb-3 text-center">
+                                    <span class="price-current">{{ currency($item->offer_price ?? $item->old_price ?? $item->regular_price) }}</span>
+                                    <span class="price-old">{{ currency($item->old_price ?? $item->regular_price) }}</span>
+                                </div>
+
+                                <button class="btn btn-product w-100">Buy Now</button>
                             </div>
-
-                            <div class="mt-2 flex-grow-1">
-                                <h3 class="product-title">
-                                    Pentanik 24 Inch Basic TV (Frameless)
-                                </h3>
-                            </div>
-
-                            <div class="product-divider"></div>
-
-                            <div class="product-price mb-3">
-                                <span class="price-current">৳7500</span>
-                                <span class="price-old">৳8250</span>
-                            </div>
-
-                            <button class="btn btn-product w-100">Buy Now</button>
                         </div>
-                    </div>
+                    @empty
+                        <p>No Products Found</p>
+                    @endforelse
