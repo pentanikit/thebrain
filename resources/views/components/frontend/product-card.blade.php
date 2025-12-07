@@ -21,14 +21,12 @@
                                
                                     <!-- Replace with real image -->
                                     <img src="{{ asset('storage').'/'.$item->thumbnail }}"
-                                        alt="{{ $item->name }}" style="object-fit: cover; border-radius: 5%;" >
+                                        alt="{{ $item->name }}"  style="object-fit: cover; border-radius: 5%;" >
                                
 
-                                <div class="mt-2 flex-grow-1">
-                                    <h3 class="product-title">
+                                    <h3 class=" my-3 product-title text-center">
                                         {{ $item->name }}
                                     </h3>
-                                </div>
 
                                 <div class="product-divider"></div>
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\BannersController;
 
 Route::prefix('/')->group(function(){
     Route::get('/', [PageController::class, 'home'])->name('homeRoute');
+    
 });
 
 
@@ -42,3 +43,9 @@ Route::prefix('admin')->group(function(){
    
 
 });
+
+Route::get('/products', [ProductController::class, 'filter'])
+    ->name('products'); // main listing + search + filter
+
+Route::get('/category/{category:slug}', [ProductController::class, 'category'])
+    ->name('category'); // category wise listing

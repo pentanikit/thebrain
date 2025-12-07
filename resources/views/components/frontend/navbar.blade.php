@@ -16,7 +16,26 @@
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
+
                 <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                        Products
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                        @foreach (categories() as $item)
+                            <li>
+                                <a class="dropdown-item"
+                                href="#">
+                                    {{ $item->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </li>
+
                     @foreach (categories() as $item)
                         <li class="nav-item"><a class="nav-link" href="#">{{ $item->name }}</a></li>
                     @endforeach

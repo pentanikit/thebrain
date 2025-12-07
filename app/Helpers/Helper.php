@@ -131,7 +131,9 @@ if (! function_exists('banner_url')) {
             return $default;
         }
 
-        return Storage::disk('public')->url($path);
+        $banner = asset('storage').'/'.$path;
+
+        return $banner;
     }
 }
 

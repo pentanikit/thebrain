@@ -20,6 +20,10 @@ class PageController extends Controller
     public function dashboard(){
         return view('backend.dashboard');
     }
+
+    public function category(){
+        return view('frontend.pages.category');
+    }
     
 
 }
