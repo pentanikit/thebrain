@@ -63,9 +63,9 @@
         }
 
         /* Hero */
-        .page-wrapper {
+        /* .page-wrapper {
             max-width: 1200px;
-        }
+        } */
 
         .hero-wrapper {
             margin-top: 88px;
@@ -145,26 +145,38 @@
             font-size: .95rem;
         }
 
-        /* Category horizontal scroll for small screen */
+        /* NEW: horizontal strip – all 8 in one line */
         .category-row {
-            row-gap: 1rem;
+            display: flex;
+            align-items: stretch;
+            flex-wrap: nowrap;         /* never wrap – always one line */
+            gap: 1rem;
+            overflow-x: auto;
+            padding: .5rem 0 1rem;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
         }
 
-        @media (max-width:575.98px) {
+        .category-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* each category item is inline block in the strip */
+        .category-item {
+            flex: 0 0 auto;
+            width: 150px;
+            scroll-snap-align: start;
+        }
+
+        /* Desktop: keep in one line, no scroll if fits */
+        @media (min-width: 992px) {
             .category-row {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: .5rem;
-            }
-
-            .category-row>div {
-                flex: 0 0 auto;
-            }
-
-            .hero-wrapper {
-                margin-top: 76px;
+                overflow-x: visible;
+                justify-content: space-between;
+                scroll-snap-type: none;
             }
         }
+
 
         /* Text section */
         .section-title {
@@ -340,7 +352,7 @@
     <x-frontend.navbar />
   
 
-    <main class="container page-wrapper hero-wrapper">
+    <main class="container hero-wrapper">
 
 
 

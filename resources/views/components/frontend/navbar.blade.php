@@ -1,8 +1,9 @@
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container page-wrapper">
-        <a class="navbar-brand d-flex align-items-center" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="{{ route('homeRoute') }}">
             <!-- Logo -->
-            <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="The Brain">
+            {{-- <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="The Brain"> --}}
+            <h4>The Brain</h4>
         </a>
 
         <!-- Toggler now opens OFFCANVAS -->
@@ -28,7 +29,7 @@
                         @foreach (categories() as $item)
                             <li>
                                 <a class="dropdown-item"
-                                href="#">
+                                href="{{ route('productfilter', $item->name) }}">
                                     {{ $item->name }}
                                 </a>
                             </li>
@@ -36,9 +37,13 @@
                     </ul>
                 </li>
 
-                    @foreach (categories() as $item)
-                        <li class="nav-item"><a class="nav-link" href="#">{{ $item->name }}</a></li>
-                    @endforeach
+                   
+                        <li class="nav-item"><a class="nav-link" href="{{ route('productfilter', 'caps') }}">Caps</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('productfilter', 'women') }}">Women</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('productfilter', 'men') }}">Men</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('productfilter', 'kids') }}">Kids</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    
                     
                 
                 </ul>
@@ -67,72 +72,55 @@
                             </span>
                         </button>
 
-                        <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
-                            aria-labelledby="cartDropdown">
-                            <!-- header -->
-                            <div class="p-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold">Cart (3 items)</h6>
-                            </div>
+<div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+     aria-labelledby="cartDropdown">
 
-                            <!-- items -->
-                            <div class="cart-items-list">
-                                <!-- Item 1 -->
-                                <div class="d-flex align-items-center p-3">
-                                    <img src="https://via.placeholder.com/80x60?text=24%22" class="cart-item-thumb me-3"
-                                        alt="Pentanik 24 Basic">
-                                    <div class="flex-grow-1">
-                                        <div class="small fw-semibold">
-                                            Pentanik 24&quot; Basic TV
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span class="small text-muted">Qty: 1</span>
-                                            <span class="small fw-semibold text-danger">৳7500</span>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- header -->
+    <div class="p-3 border-bottom">
+        <h6 class="mb-0 fw-semibold">
+            Cart ({{ $cart->totalQuantity() }} items)
+        </h6>
+    </div>
 
-                                <!-- Item 2 -->
-                                <div class="d-flex align-items-center p-3 border-top">
-                                    <img src="https://via.placeholder.com/80x60?text=32%22" class="cart-item-thumb me-3"
-                                        alt="Pentanik 32 Smart">
-                                    <div class="flex-grow-1">
-                                        <div class="small fw-semibold">
-                                            Pentanik 32&quot; Smart TV
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span class="small text-muted">Qty: 1</span>
-                                            <span class="small fw-semibold text-danger">৳14000</span>
-                                        </div>
-                                    </div>
-                                </div>
+    <!-- items -->
+    <div class="cart-items-list">
+        @forelse($items as $item)
+            <div class="d-flex align-items-center p-3 {{ !$loop->first ? 'border-top' : '' }}">
+                <img src="{{ $item->product->thumbnail ?? 'https://via.placeholder.com/80x60?text=TV' }}"
+                     class="cart-item-thumb me-3"
+                     alt="{{ $item->product->name }}">
 
-                                <!-- Item 3 -->
-                                <div class="d-flex align-items-center p-3 border-top">
-                                    <img src="https://via.placeholder.com/80x60?text=43%22" class="cart-item-thumb me-3"
-                                        alt="Pentanik 43 Google TV">
-                                    <div class="flex-grow-1">
-                                        <div class="small fw-semibold">
-                                            Pentanik 43&quot; Google TV
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-1">
-                                            <span class="small text-muted">Qty: 1</span>
-                                            <span class="small fw-semibold text-danger">৳29900</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="flex-grow-1">
+                    <div class="small fw-semibold">
+                        {{ $item->product->name }}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <span class="small text-muted">Qty: {{ $item->quantity }}</span>
+                        <span class="small fw-semibold text-danger">
+                            ৳{{ number_format($item->total_price) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="p-3 text-muted small">
+                Your cart is empty.
+            </div>
+        @endforelse
+    </div>
 
-                            <!-- footer -->
-                            <div class="p-3 border-top">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="fw-semibold">Subtotal</span>
-                                    <span class="fw-bold text-danger">৳51,400</span>
-                                </div>
-                                <a href="/checkout" class="btn btn-primary w-100 btn-sm">
-                                    Go to Checkout
-                                </a>
-                            </div>
-                        </div>
+    <!-- footer -->
+    <div class="p-3 border-top">
+        <div class="d-flex justify-content-between mb-2">
+            <span class="fw-semibold">Subtotal</span>
+            <span class="fw-bold text-danger">৳{{ number_format($cart->total) }}</span>
+        </div>
+        <a href="{{ route('checkout') }}" class="btn btn-primary w-100 btn-sm">
+            Go to Checkout
+        </a>
+    </div>
+</div>
+
                     </div>
                     <!-- /cart dropdown -->
                 </div>

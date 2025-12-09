@@ -6,7 +6,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BannersController;
-
+use App\Http\Controllers\ProductListingController;
+use App\Http\Controllers\Frontend\CartController;
 
 //Frontend Routes
 
@@ -44,8 +45,32 @@ Route::prefix('admin')->group(function(){
 
 });
 
-Route::get('/products', [ProductController::class, 'filter'])
-    ->name('products'); // main listing + search + filter
 
-Route::get('/category/{category:slug}', [ProductController::class, 'category'])
-    ->name('category'); // category wise listing
+
+Route::prefix('cart')->name('cart.')->group(function () {
+    // full cart page
+    Route::get('/', [CartController::class, 'index'])->name('index');
+
+    // mini-cart partial (optional, if you want AJAX reload or include)
+    Route::get('/mini', [CartController::class, 'mini'])->name('mini');
+
+    // add to cart
+    Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
+
+    // update quantity
+    Route::post('/update/{item}', [CartController::class, 'update'])->name('update');
+
+    // remove one item
+    Route::delete('/remove/{item}', [CartController::class, 'remove'])->name('remove');
+
+    // clear cart
+    Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
+});
+
+// Main all-products listing
+Route::get('/products', [ProductListingController::class, 'index'])
+    ->name('allproducts');
+
+// Category-wise listing: /category/led-tv, /category/32-inch-tv etc.
+Route::get('/category/{slug}', [ProductListingController::class, 'category'])
+    ->name('productfilter');
