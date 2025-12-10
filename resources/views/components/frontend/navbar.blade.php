@@ -68,58 +68,57 @@
                             <i class="bi bi-cart3"></i>
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                3
+                                {{ $cart->totalQuantity() }}
                             </span>
                         </button>
 
-<div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
-     aria-labelledby="cartDropdown">
+                    <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
+                        aria-labelledby="cartDropdown">
+                        <!-- header -->
+                        <div class="p-3 border-bottom">
+                            <h6 class="mb-0 fw-semibold">
+                                Cart ({{ $cart->totalQuantity() }} items)
+                            </h6>
+                        </div>
 
-    <!-- header -->
-    <div class="p-3 border-bottom">
-        <h6 class="mb-0 fw-semibold">
-            Cart ({{ $cart->totalQuantity() }} items)
-        </h6>
-    </div>
+                        <!-- items -->
+                        <div class="cart-items-list">
+                            @forelse($items as $item)
+                                <div class="d-flex align-items-center p-3 {{ !$loop->first ? 'border-top' : '' }}">
+                                    <img src="{{ $item->product->thumbnail ?? 'https://via.placeholder.com/80x60?text=TV' }}"
+                                        class="cart-item-thumb me-3"
+                                        alt="{{ $item->product->name }}">
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-semibold">
+                                            {{ $item->product->name }}
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <span class="small text-muted">Qty: {{ $item->quantity }}</span>
+                                            <span class="small fw-semibold text-danger">
+                                                ৳{{ number_format($item->total_price) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="p-3 text-muted small">
+                                    Your cart is empty.
+                                </div>
+                            @endforelse
+                        </div>
 
-    <!-- items -->
-    <div class="cart-items-list">
-        @forelse($items as $item)
-            <div class="d-flex align-items-center p-3 {{ !$loop->first ? 'border-top' : '' }}">
-                <img src="{{ $item->product->thumbnail ?? 'https://via.placeholder.com/80x60?text=TV' }}"
-                     class="cart-item-thumb me-3"
-                     alt="{{ $item->product->name }}">
-
-                <div class="flex-grow-1">
-                    <div class="small fw-semibold">
-                        {{ $item->product->name }}
+                        <!-- footer -->
+                        <div class="p-3 border-top">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Subtotal</span>
+                                <span class="fw-bold text-danger">৳{{ number_format($cart->total) }}</span>
+                            </div>
+                            <a href="" class="btn btn-primary w-100 btn-sm">
+                                Go to Checkout
+                            </a>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-1">
-                        <span class="small text-muted">Qty: {{ $item->quantity }}</span>
-                        <span class="small fw-semibold text-danger">
-                            ৳{{ number_format($item->total_price) }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="p-3 text-muted small">
-                Your cart is empty.
-            </div>
-        @endforelse
-    </div>
 
-    <!-- footer -->
-    <div class="p-3 border-top">
-        <div class="d-flex justify-content-between mb-2">
-            <span class="fw-semibold">Subtotal</span>
-            <span class="fw-bold text-danger">৳{{ number_format($cart->total) }}</span>
-        </div>
-        <a href="{{ route('checkout') }}" class="btn btn-primary w-100 btn-sm">
-            Go to Checkout
-        </a>
-    </div>
-</div>
 
                     </div>
                     <!-- /cart dropdown -->

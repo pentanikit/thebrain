@@ -7,7 +7,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BannersController;
 use App\Http\Controllers\ProductListingController;
-use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 //Frontend Routes
 
@@ -49,13 +50,13 @@ Route::prefix('admin')->group(function(){
 
 Route::prefix('cart')->name('cart.')->group(function () {
     // full cart page
-    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::get('/', [CartController::class, 'index'])->name('showcart');
 
     // mini-cart partial (optional, if you want AJAX reload or include)
     Route::get('/mini', [CartController::class, 'mini'])->name('mini');
 
     // add to cart
-    Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
+    Route::get('/add/{product}', [CartController::class, 'add'])->name('addcart');
 
     // update quantity
     Route::post('/update/{item}', [CartController::class, 'update'])->name('update');
@@ -66,6 +67,15 @@ Route::prefix('cart')->name('cart.')->group(function () {
     // clear cart
     Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
 });
+
+
+Route::get('product-details/{product}', [ProductController::class, 'show'])->name('singleproduct');
+
+// Place order (called from checkout form)
+Route::post('/order', [OrderController::class, 'store'])->name('orders.store');
+
+// Thank you page
+Route::get('/order/thank-you/{orderNumber}', [OrderController::class, 'thankYou'])->name('orders.thankyou');
 
 // Main all-products listing
 Route::get('/products', [ProductListingController::class, 'index'])

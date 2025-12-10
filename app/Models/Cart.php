@@ -15,14 +15,14 @@ class Cart extends Model
         'status',
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function items(): HasMany
+    public function items()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->hasMany(CartItems::class);
     }
 
     // Convenience helpers

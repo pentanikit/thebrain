@@ -207,7 +207,18 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        // Load only relationships here
+        $product->load([
+            'images',
+            'specifications',
+            'descriptions',
+            'category',
+            'subCategory',
+        ]);
+
+        return view('frontend.pages.single-product', [
+            'product' => $product,
+        ]);
     }
 
     /**

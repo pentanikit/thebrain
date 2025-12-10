@@ -228,7 +228,7 @@
             border-radius: 22px;
             border: 1px solid #e5e7eb;
             background: #ffffff;
-            padding: 1.2rem 1.3rem 1.4rem;
+            padding: 1.2rem 1.0rem 1.4rem;
             transition: all .18s ease;
             box-shadow: 0 10px 30px rgba(15, 23, 42, .04);
         }
@@ -341,7 +341,7 @@
             border-top: 1px solid rgba(148, 163, 184, .4);
         }
     </style>
-    @yield('style')
+    @stack('styles')
 </head>
 
 <body>
@@ -371,6 +371,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

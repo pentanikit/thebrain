@@ -35,7 +35,7 @@
                                     <span class="price-old">{{ currency($item->old_price ?? $item->regular_price) }}</span>
                                 </div>
 
-                                <button class="btn btn-product w-100">Buy Now</button>
+                                <a href="{{ route('singleproduct', $item->id) }}" class="btn btn-product w-100">Buy Now</a>
                             </div>
                         </div>
                     @empty
