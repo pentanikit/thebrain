@@ -9,6 +9,7 @@ use App\Http\Controllers\BannersController;
 use App\Http\Controllers\ProductListingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 
 //Frontend Routes
 
@@ -19,7 +20,7 @@ Route::prefix('/')->group(function(){
 
 
 //Backend Routes
-Route::prefix('admin')->group(function(){
+Route::prefix('admin')->middleware('admin')->group(function(){
     Route::get('/', [PageController::class, 'dashboard'])->name('admindashboard');
 
     Route::prefix('products')->group(function(){
@@ -45,6 +46,10 @@ Route::prefix('admin')->group(function(){
    
 
 });
+
+Route::get('signin', [UserController::class, 'show'])->name('loginform');
+Route::post('login', [UserController::class, 'login'])->name('loginroute');
+Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
 
 
