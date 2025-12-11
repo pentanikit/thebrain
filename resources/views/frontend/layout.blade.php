@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Ponnobd – Regular Pentanik TV 2025</title>
+    <title>The Brain – Premium Luxury Brand Shop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Google Font -->
@@ -146,10 +146,36 @@
         }
 
         /* NEW: horizontal strip – all 8 in one line */
+
+        /* Category grid layout */
         .category-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr)); /* mobile: 2 columns */
+            gap: 0.75rem;
+        }
+
+        .category-item {
+            width: 100%;
+        }
+
+        /* Small devices and up (≥576px): 4 columns */
+        @media (min-width: 576px) {
+            .category-row {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        /* Large devices and up (≥992px): 8 columns in one row */
+        @media (min-width: 992px) {
+            .category-row {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+            }
+        }
+
+        /* .category-row {
             display: flex;
             align-items: stretch;
-            flex-wrap: nowrap;         /* never wrap – always one line */
+            flex-wrap: nowrap;         
             gap: 1rem;
             overflow-x: auto;
             padding: .5rem 0 1rem;
@@ -161,21 +187,21 @@
             display: none;
         }
 
-        /* each category item is inline block in the strip */
+        
         .category-item {
             flex: 0 0 auto;
             width: 150px;
             scroll-snap-align: start;
         }
 
-        /* Desktop: keep in one line, no scroll if fits */
+        
         @media (min-width: 992px) {
             .category-row {
                 overflow-x: visible;
                 justify-content: space-between;
                 scroll-snap-type: none;
             }
-        }
+        } */
 
 
         /* Text section */
@@ -209,8 +235,8 @@
 
         /* ===== Regular Pentanik TV Product Section ===== */
         .product-section {
-            padding-top: 2rem;
-            padding-bottom: 3rem;
+            padding-top: 0rem !important;
+            padding-bottom: 2rem;
         }
 
         .product-section .section-title {
@@ -255,6 +281,7 @@
             text-align: center;
             padding: 1.5rem 0 .25rem;
             min-height: 170px;
+
         }
 
         .product-image-wrapper img {
@@ -340,6 +367,13 @@
         footer {
             border-top: 1px solid rgba(148, 163, 184, .4);
         }
+
+
+
+
+
+
+
     </style>
     @stack('styles')
 </head>

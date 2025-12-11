@@ -108,7 +108,7 @@ class OrderController extends Controller
             ->where('order_number', $orderNumber)
             ->firstOrFail();
 
-        return view('frontend.pages.order-thank-you', compact('order'));
+        return view('frontend.pages.thank-you', compact('order'));
     }
 
     /**

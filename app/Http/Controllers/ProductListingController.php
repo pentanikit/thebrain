@@ -19,6 +19,12 @@ class ProductListingController extends Controller
             $query->whereIn('category_id', $categoryIds);
         }
 
+        // Sub-category filter (multiple allowed)
+        if ($request->filled('sub_category')) {
+            $subCategoryIds = (array) $request->get('sub_category');
+            $query->whereIn('sub_category_id', $subCategoryIds);
+        }
+
         // Price filter
         if ($request->filled('min_price')) {
             $query->where('price', '>=', (float) $request->get('min_price'));
@@ -61,7 +67,7 @@ class ProductListingController extends Controller
 
         $products = $query->paginate($perPage)->appends($request->query());
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::whereNull('parent_id')->with('children')->get();
 
         return view('frontend.pages.category', [
             'products'   => $products,
@@ -71,7 +77,7 @@ class ProductListingController extends Controller
     }
 
 
-        // ---------- CATEGORY-WISE LISTING ----------
+    // ---------- CATEGORY-WISE LISTING ----------
     public function category(Request $request, string $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
@@ -85,6 +91,12 @@ class ProductListingController extends Controller
         if ($request->filled('category')) {
             $categoryIds = (array) $request->get('category');
             $query->whereIn('category_id', $categoryIds);
+        }
+
+        // Sub-category filter (multiple allowed)
+        if ($request->filled('sub_category')) {
+            $subCategoryIds = (array) $request->get('sub_category');
+            $query->whereIn('sub_category_id', $subCategoryIds);
         }
 
         // Price filter
@@ -128,17 +140,14 @@ class ProductListingController extends Controller
 
         $products = $query->paginate($perPage)->appends($request->query());
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::whereNull('parent_id')->with('children')->orderBy('name')->get();
 
         return view('frontend.pages.category', [
             'products'        => $products,
             'categories'      => $categories,
             'perPage'         => $perPage,
-            'currentCategory' => $category,  // 🔥 for dynamic heading + form action + default category
+            'currentCategory' => $category,  // for dynamic heading + form action + default category
         ]);
     }
-
-
-
 
 }
