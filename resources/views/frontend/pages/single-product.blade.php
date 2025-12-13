@@ -247,7 +247,7 @@
                         <li>EMI system available</li>
                         <li>Home delivery + installation (Dhaka City)</li>
                         <li>Outside Dhaka: Courier delivery</li> --}}
-                        {{ $product->description[0]->body ?? '' }}
+                        {{ $product->descriptions[0]->body ?? '' }}
                     </ul>
 
                     <p class="mb-3 mx-3 fw-semibold">
@@ -421,7 +421,7 @@
                 </div>
             </div>
 
-            
+
         </div>
     </div>
 @endsection
