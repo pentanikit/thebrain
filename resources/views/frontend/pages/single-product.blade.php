@@ -247,13 +247,35 @@
                         <li>EMI system available</li>
                         <li>Home delivery + installation (Dhaka City)</li>
                         <li>Outside Dhaka: Courier delivery</li> --}}
-                        {{ $product->descriptions[0]->body ?? '' }}
+                        @if (!empty($product->specifications[0]) && is_iterable($product->specifications[0]->value))
+                            @forelse ($product->specifications[0]->value as $item)
+                                @php
+                                    $k = $item['key'] ?? null;
+                                    $v = $item['value'] ?? null;
+                                @endphp
+
+                                @if ($k && $v)
+                                    <div class="detail-pill mb-3">
+                                        <span>{{ $k }}:</span>
+                                        <span class="price-current">{{ $v }}</span>
+                                    </div>
+                                @else
+                                    <div class="detail-pill mb-3">
+                                        <span class="text-danger">Specification data missing (key/value not found).</span>
+                                    </div>
+                                @endif
+                            @empty
+                                <p>Not available</p>
+                            @endforelse
+                        @else
+                            <p>Not available</p>
+                        @endif
+
+
+
                     </ul>
 
-                    <p class="mb-3 mx-3 fw-semibold">
-                        Details : <a href="tel:+8801880162323" class="text-decoration-none text-primary">
-                            +8801880162323</a>
-                    </p>
+
 
                     <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
                         <div class="detail-pill">
@@ -272,6 +294,11 @@
 
                         </div>
                     </div>
+
+                    <p class="mb-3 mx-3 fw-semibold">
+                        Details : <a href="tel:+8801827400100" class="text-decoration-none text-primary">
+                            +8801827400100</a>
+                    </p>
 
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         <a href="{{ route('cart.addcart', $product->id) }}" class="btn btn-buy-now px-4 py-2 text-white">
@@ -330,7 +357,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content mb-5">
                 <!-- Specifications -->
                 {{-- <div class="tab-pane fade show active" id="specs" role="tabpanel" aria-labelledby="specs-tab">
                     <div class="tab-card">
@@ -360,7 +387,7 @@
                     <div class="tab-card">
                         <h5 class="mb-3">Product Description</h5>
                         <p class="small text-muted">
-                            {!! nl2br(e($product->descriptions[0]->body ?? 'No description available'))  !!}
+                            {!! nl2br(e($product->descriptions[0]->body ?? 'No description available')) !!}
                         </p>
 
                     </div>
@@ -384,7 +411,7 @@
                         <div class="row g-3">
                             @forelse ($product->images as $item)
                                 <div class="col-6 col-md-3">
-                                    <img src="{{ asset('storage').'/'.$item->path }}" class="img-fluid rounded-3"
+                                    <img src="{{ asset('storage') . '/' . $item->path }}" class="img-fluid rounded-3"
                                         alt="">
                                 </div>
                             @empty
@@ -420,6 +447,18 @@
                     </div>
                 </div>
             </div>
+           
+        <div class="row g-4">
+            <h3>Related Products</h3>
+
+            @if (!empty($product->category) && !empty($product->category->name) )
+                <x-frontend.product-card :type="$product->category->name" />
+            @else
+                <div class="col-12">
+                    <p class="text-muted mb-0">Related products not available (subcategory missing).</p>
+                </div>
+            @endif
+        </div>
 
 
         </div>

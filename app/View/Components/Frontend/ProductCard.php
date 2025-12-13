@@ -18,7 +18,7 @@ class ProductCard extends Component
     public function __construct($type)
     {
         $categoryType = Category::where('name', $type)->pluck('id')->toArray();
-        $this->products = Product::whereIn('sub_category_id', $categoryType)->where('is_active', true)->latest()->paginate(50);
+        $this->products = Product::whereIn('sub_category_id', $categoryType)->orWhereIn('category_id', $categoryType)->where('is_active', true)->latest()->paginate(50);
     }
 
     /**

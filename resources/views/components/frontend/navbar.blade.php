@@ -2,8 +2,8 @@
     <div class="container page-wrapper">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('homeRoute') }}">
             <!-- Logo -->
-            {{-- <img src="https://via.placeholder.com/140x34?text=Ponnobd" alt="The Brain"> --}}
-            <h4>The Brain</h4>
+            <img src="{{ asset('Tbe-Brain.png') }}"  alt="The Brain">
+            {{-- <h4>The Brain</h4> --}}
         </a>
 
         <!-- Toggler now opens OFFCANVAS -->
