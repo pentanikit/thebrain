@@ -25,7 +25,7 @@
                                
 
                                     <h3 class=" my-3 product-title text-center">
-                                        {{ $item->name }}
+                                       <a style="color: black; text-decoration:none;" href="{{ route('singleproduct', $item->id) }}"> {{ $item->name }}</a>
                                     </h3>
 
                                 <div class="product-divider"></div>

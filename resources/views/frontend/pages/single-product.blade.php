@@ -250,7 +250,7 @@
                         {{ $product->description->body ?? '' }}
                     </ul>
 
-                    <p class="mb-3 fw-semibold">
+                    <p class="mb-3 mx-3 fw-semibold">
                         Details : <a href="tel:+8801880162323" class="text-decoration-none text-primary">
                             +8801880162323</a>
                     </p>
@@ -281,7 +281,9 @@
                             <i class="bi bi-cart-plus me-1"></i> Add to Cart
                         </a>
                     </div>
-
+                    <div class="small text-muted my-3">
+                        {{ $product->descriptions->body ?? '' }}
+                    </div>
                     <p class="small text-muted mb-0">
                         * Price in Bangladesh may change without prior notice. Please confirm the latest price over phone.
                     </p>

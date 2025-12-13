@@ -40,7 +40,6 @@ class BannersController extends Controller
      */
     public function update(Request $request)
     {
-       
         $request->validate([
             'banner_1' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:7096'],
             'banner_2' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:7096'],
@@ -52,29 +51,26 @@ class BannersController extends Controller
 
         foreach ($keys as $key) {
             if ($request->hasFile($key)) {
-                $file = $request->file($key);
 
-                
-                $filename = $key . '_' . time() . '.' . $file->getClientOriginalExtension();
+                // If you already have duplicates, take the latest one
+                $existing = Banners::where('key', $key)->latest('id')->first();
 
-               
-                $path = $file->storeAs('banners', $filename, 'public'); 
-                
-                $existing = Banners::where('key', $key)->first();
                 if ($existing && $existing->value) {
                     Storage::disk('public')->delete($existing->value);
                 }
 
-                
-                Banners::updateOrCreate([
-                    'key' => $key,
-                    'value' => $path
-                ]);
+                $file = $request->file($key);
+                $filename = $key . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('banners', $filename, 'public');
+
+                // ✅ Correct usage: match by key, update value
+                Banners::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $path]
+                );
             }
         }
 
-        return redirect()
-            ->back()
-            ->with('success', 'Banners updated successfully.');
+        return redirect()->back()->with('success', 'Banners updated successfully.');
     }
 }
