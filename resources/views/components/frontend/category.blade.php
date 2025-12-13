@@ -18,12 +18,15 @@
             <div class="category-row">
                 @forelse (categories() as $item)
                     <div class="category-item">
+                        <a style="text-decoration: none;" href="{{ route('productfilter', $item->name) }}">
                         <div class="category-card text-center p-3 h-100">
                             <img src="{{ asset('storage') . '/' . $item->thumbnail }}" class="img-fluid mb-3"
                                 alt="{{ $item->name }}">
                             <div class="category-name">{{ $item->name }}</div>
                             {{-- <small class="text-muted">24&quot; – 100&quot; smart TVs</small> --}}
                         </div>
+                        </a>
+
                     </div>
 
                 @empty

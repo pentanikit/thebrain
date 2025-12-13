@@ -247,7 +247,7 @@
                         <li>EMI system available</li>
                         <li>Home delivery + installation (Dhaka City)</li>
                         <li>Outside Dhaka: Courier delivery</li> --}}
-                        {{ $product->description->body ?? '' }}
+                        {{ $product->description[0]->body ?? '' }}
                     </ul>
 
                     <p class="mb-3 mx-3 fw-semibold">
@@ -281,9 +281,9 @@
                             <i class="bi bi-cart-plus me-1"></i> Add to Cart
                         </a>
                     </div>
-                    <div class="small text-muted my-3">
+                    {{-- <div class="small text-muted my-3">
                         {{ $product->descriptions[0]->body ?? '' }}
-                    </div>
+                    </div> --}}
                     <p class="small text-muted mb-0">
                         * Price in Bangladesh may change without prior notice. Please confirm the latest price over phone.
                     </p>
@@ -356,7 +356,7 @@
                 </div> --}}
 
                 <!-- Description -->
-                <div class="tab-pane fade" id="desc" role="tabpanel" aria-labelledby="desc-tab">
+                <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">
                     <div class="tab-card">
                         <h5 class="mb-3">Product Description</h5>
                         <p class="small text-muted">
