@@ -282,7 +282,7 @@
                         </a>
                     </div>
                     <div class="small text-muted my-3">
-                        {{ $product->descriptions->body ?? '' }}
+                        {{ $product->descriptions[0]->body ?? '' }}
                     </div>
                     <p class="small text-muted mb-0">
                         * Price in Bangladesh may change without prior notice. Please confirm the latest price over phone.
