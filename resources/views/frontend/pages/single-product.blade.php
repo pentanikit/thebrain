@@ -292,24 +292,24 @@
 
             <!-- Tabs: specs / description / etc. -->
             <ul class="nav nav-tabs product-tabs mb-3" id="productTab" role="tablist">
-                <li class="nav-item" role="presentation">
+                {{-- <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs"
                         type="button" role="tab">
                         Specifications
                     </button>
-                </li>
+                </li> --}}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button"
                         role="tab">
                         Descriptions
                     </button>
                 </li>
-                <li class="nav-item" role="presentation">
+                {{-- <li class="nav-item" role="presentation">
                     <button class="nav-link" id="support-tab" data-bs-toggle="tab" data-bs-target="#support" type="button"
                         role="tab">
                         Support
                     </button>
-                </li>
+                </li> --}}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="gallery-tab" data-bs-toggle="tab" data-bs-target="#gallery" type="button"
                         role="tab">
@@ -332,7 +332,7 @@
 
             <div class="tab-content">
                 <!-- Specifications -->
-                <div class="tab-pane fade show active" id="specs" role="tabpanel" aria-labelledby="specs-tab">
+                {{-- <div class="tab-pane fade show active" id="specs" role="tabpanel" aria-labelledby="specs-tab">
                     <div class="tab-card">
                         <h5 class="mb-3">{{ $product->name }}</h5>
                         <div class="table-responsive">
@@ -353,7 +353,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Description -->
                 <div class="tab-pane fade" id="desc" role="tabpanel" aria-labelledby="desc-tab">
@@ -367,7 +367,7 @@
                 </div>
 
                 <!-- Support -->
-                <div class="tab-pane fade" id="support" role="tabpanel" aria-labelledby="support-tab">
+                {{-- <div class="tab-pane fade" id="support" role="tabpanel" aria-labelledby="support-tab">
                     <div class="tab-card">
                         <h5 class="mb-3">Support & Warranty</h5>
                         <p class="small text-muted mb-2">
@@ -375,7 +375,7 @@
                         </p>
 
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Galleries -->
                 <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
