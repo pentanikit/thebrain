@@ -8,6 +8,7 @@ class PageController extends Controller
 {
     // Client Router
     public function home(Request $request){
+        
         return view('frontend.pages.home');
     }
 
