@@ -102,7 +102,7 @@
 
             <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
                 <!-- user -->
-                <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a>
+                {{-- <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a> --}}
 
                 <!-- cart dropdown -->
                 <div class="dropdown">

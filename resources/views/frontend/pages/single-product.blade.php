@@ -360,7 +360,7 @@
                     <div class="tab-card">
                         <h5 class="mb-3">Product Description</h5>
                         <p class="small text-muted">
-                            {{ $product->descriptions[0]->body ?? 'No description available' }}
+                            {!! nl2br(e($product->descriptions[0]->body ?? 'No description available'))  !!}
                         </p>
 
                     </div>
@@ -420,6 +420,8 @@
                     </div>
                 </div>
             </div>
+
+            
         </div>
     </div>
 @endsection
