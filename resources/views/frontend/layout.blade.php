@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>The Brain – Premium Luxury Brand Shop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="icon" href="{{ asset('The-Brain-Logo.png') }}" width="32" height="32">
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
