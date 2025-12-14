@@ -14,90 +14,126 @@ class OrderController extends Controller
     /**
      * Handle order placement from cart (POST).
      */
-    public function store(Request $request)
-    {
-        // Basic checkout validation – adjust as needed
-        $data = $request->validate([
-            'customer_name'      => 'required|string|max:255',
-            'customer_phone'     => 'required|string|max:30',
-            'customer_email'     => 'nullable|email|max:255',
-            'shipping_address'   => 'required|string',
-            'shipping_city'      => 'nullable|string|max:100',
-            'shipping_postcode'  => 'nullable|string|max:30',
-            'notes'              => 'nullable|string',
-            'payment_method'     => 'required|string|max:50', // e.g. cod, bkash, card
-        ]);
+public function store(Request $request)
+{
+    // Updated validation for delivery_area (from cart modal)
+    $data = $request->validate([
+        'customer_name'      => 'required|string|max:255',
+        'customer_phone'     => 'required|string|max:30',
+        'customer_email'     => 'nullable|email|max:255',
 
-        // Get current cart with items
-        $cart = $this->getCurrentCart($request);
+        'shipping_address'   => 'required|string',
+        'shipping_city'      => 'nullable|string|max:100',
+        'shipping_postcode'  => 'nullable|string|max:30',
 
-        if (!$cart || $cart->items->isEmpty()) {
-            return redirect()
-                ->route('cart.showcart')
-                ->with('error', 'Your cart is empty.');
+        'notes'              => 'nullable|string',
+        'payment_method'     => 'required|string|max:50', // cod, bkash, card
+
+        // from updated cart modal
+        'delivery_area'      => 'required|in:inside_dhaka,outside_dhaka',
+
+        // frontend calculated values (DO NOT TRUST — optional)
+        'frontend_subtotal'  => 'nullable|numeric|min:0',
+        'shipping_charge'    => 'nullable|numeric|min:0',
+        'payable_amount'     => 'nullable|numeric|min:0',
+    ]);
+
+    // Get current cart with items
+    $cart = $this->getCurrentCart($request);
+
+    if (!$cart || $cart->items->isEmpty()) {
+        return redirect()
+            ->route('cart.showcart')
+            ->with('error', 'Your cart is empty.');
+    }
+
+    // ===== SAFE site_setting() wrapper (missing key / null / throws => fallback) =====
+    // $safe_setting = function ($key, $default = 0) {
+    //     try {
+    //         $val = site_setting($key);
+    //         if ($val === null || $val === '') return $default;
+    //         return is_numeric($val) ? (float) $val : $default;
+    //     } catch (\Throwable $e) {
+    //         return $default;
+    //     }
+    // };
+
+    $insideCharge  = site_setting('shipping_charge_inside_dhaka', 0);
+    $outsideCharge = site_setting('shipping_charge_outside_dhaka', 0);
+
+    // Decide shipping cost based on delivery_area
+    $shippingCost = ($data['delivery_area'] === 'outside_dhaka') ? $outsideCharge : $insideCharge;
+
+    // Create order in a transaction
+    $order = DB::transaction(function () use ($data, $cart, $shippingCost) {
+
+        // Calculate subtotal from cart (trusted)
+        $subtotal = 0;
+
+        foreach ($cart->items as $cartItem) {
+            $product   = $cartItem->product;
+
+            $unitPrice = $cartItem->price ?? ($product->sale_price ?? $product->price ?? 0);
+            $qty       = (int) ($cartItem->quantity ?? 1);
+
+            $subtotal += ((float) $unitPrice * $qty);
         }
 
-        // Create order in a transaction
-        $order = DB::transaction(function () use ($data, $cart, $request) {
-            // Calculate subtotal from cart
-            $subtotal = 0;
+        $discount = 0; // coupon logic later
+        $total    = $subtotal - $discount + (float) $shippingCost;
 
-            foreach ($cart->items as $cartItem) {
-                $unitPrice = $cartItem->price ?? ($cartItem->product->sale_price ?? $cartItem->product->price ?? 0);
-                $subtotal += $unitPrice * $cartItem->quantity;
-            }
+        // Create order (ONLY columns that exist in your migration)
+        $order = Order::create([
+            // 'user_id'           => auth()->id(),
+            'order_number'      => $this->generateOrderNumber(),
 
-            $shippingCost = 0;   // you can set some logic later
-            $discount     = 0;   // coupon logic etc
-            $total        = $subtotal - $discount + $shippingCost;
+            'customer_name'     => $data['customer_name'],
+            'customer_phone'    => $data['customer_phone'],
+            'customer_email'    => $data['customer_email'] ?? null,
 
-            $order = Order::create([
-                'user_id'          => auth()->id(),
-                'order_number'     => $this->generateOrderNumber(),
-                'customer_name'    => $data['customer_name'],
-                'customer_phone'   => $data['customer_phone'],
-                'customer_email'   => $data['customer_email'] ?? null,
-                'shipping_address' => $data['shipping_address'],
-                'shipping_city'    => $data['shipping_city'] ?? null,
-                'shipping_postcode'=> $data['shipping_postcode'] ?? null,
-                'subtotal'         => $subtotal,
-                'discount'         => $discount,
-                'shipping_cost'    => $shippingCost,
-                'total'            => $total,
-                'status'           => 'pending',
-                'payment_method'   => $data['payment_method'],
-                'payment_status'   => 'unpaid',
-                'notes'            => $data['notes'] ?? null,
+            'shipping_address'  => $data['shipping_address'],
+            'shipping_city'     => $data['shipping_city'] ?? null,
+            'shipping_postcode' => $data['shipping_postcode'] ?? null,
+
+            'subtotal'          => $subtotal,
+            'discount'          => $discount,
+            'shipping_cost'     => $shippingCost,
+            'total'             => $total,
+
+            'status'            => 'pending',
+            'payment_method'    => $data['payment_method'],
+            'payment_status'    => 'unpaid',
+            'notes'             => $data['notes'] ?? null,
+        ]);
+
+        // Create order items from cart items
+        foreach ($cart->items as $cartItem) {
+            $product   = $cartItem->product;
+            $unitPrice = $cartItem->price ?? ($product->sale_price ?? $product->price ?? 0);
+            $qty       = (int) ($cartItem->quantity ?? 1);
+            $rowTotal  = (float) $unitPrice * $qty;
+
+            OrderItems::create([
+                'order_id'      => $order->id,
+                'product_id'    => $product->id ?? null,
+                'product_name'  => $product->name ?? 'Product',
+                'product_sku'   => $product->sku ?? null,
+                'quantity'      => $qty,
+                'unit_price'    => $unitPrice,
+                'total_price'   => $rowTotal,
             ]);
+        }
 
-            // Create order items from cart items
-            foreach ($cart->items as $cartItem) {
-                $product   = $cartItem->product;
-                $unitPrice = $cartItem->price ?? ($product->sale_price ?? $product->price ?? 0);
-                $qty       = $cartItem->quantity;
-                $rowTotal  = $unitPrice * $qty;
+        // Clear cart after order placed
+        $cart->items()->delete();
+        $cart->delete();
 
-                OrderItems::create([
-                    'order_id'     => $order->id,
-                    'product_id'   => $product->id ?? null,
-                    'product_name' => $product->name ?? 'Product',
-                    'product_sku'  => $product->sku ?? null,
-                    'quantity'     => $qty,
-                    'unit_price'   => $unitPrice,
-                    'total_price'  => $rowTotal,
-                ]);
-            }
+        return $order;
+    });
 
-            // Clear cart after order placed
-            $cart->items()->delete();
-            $cart->delete();
+    return redirect()->route('orders.thankyou', $order->order_number);
+}
 
-            return $order;
-        });
-
-        // Redirect to thank you page with order_number
-        return redirect()->route('orders.thankyou', $order->order_number);
-    }
 
     /**
      * Thank you page showing order details.

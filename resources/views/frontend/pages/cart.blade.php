@@ -94,6 +94,34 @@
             color:#fff;
         }
 
+        .delivery-option{
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            padding:.65rem .75rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:.75rem;
+            cursor:pointer;
+        }
+        .delivery-option:hover{
+            border-color:#cbd5e1;
+        }
+        .delivery-option .left{
+            display:flex;
+            flex-direction:column;
+            line-height:1.1;
+        }
+        .delivery-option .title{
+            font-weight:700;
+            font-size:.9rem;
+        }
+        .delivery-option .sub{
+            font-size:.8rem;
+            color:#6b7280;
+        }
+
         @media (max-width:991.98px){
             .cart-summary-wrapper{
                 margin-top:1.5rem;
@@ -116,6 +144,22 @@
         </div>
 
         @php
+            // ===== SAFE site_setting() wrapper =====
+            // If helper throws / missing key / null => fallback to 0
+            $safe_setting = function ($key, $default = 0) {
+                try {
+                    $val = site_setting($key);
+                    if ($val === null || $val === '') return $default;
+                    if (is_numeric($val)) return (int) $val;
+                    return $default;
+                } catch (\Throwable $e) {
+                    return $default;
+                }
+            };
+
+            $deliveryInside  = site_setting('shipping_charge_inside_dhaka', 0);
+            $deliveryOutside = site_setting('shipping_charge_outside_dhaka', 0);
+
             // Calculate subtotal and total item count
             $subtotal = 0;
             $totalItems = 0;
@@ -129,6 +173,11 @@
             }
 
             $totalItems = $totalItems ?: $items->count();
+
+            // defaults
+            $defaultDeliveryType = 'inside_dhaka';
+            $defaultShipping = $deliveryInside;
+            $defaultPayable  = $subtotal + $defaultShipping;
         @endphp
 
         <div class="row g-4">
@@ -227,6 +276,59 @@
                         </span>
                     </div>
 
+                    {{-- Delivery area selection --}}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold">Delivery Area</span>
+                            <span class="small text-muted">Choose one</span>
+                        </div>
+
+                        <label class="delivery-option mb-2">
+                            <span class="left">
+                                <span class="title">Inside Dhaka</span>
+                                <span class="sub">Shipping ৳{{ number_format(site_setting('shipping_charge_inside_dhaka'), 0) }}</span>
+                            </span>
+                            <input class="form-check-input m-0"
+                                   type="radio"
+                                   name="delivery_area_choice"
+                                   value="inside_dhaka"
+                                   checked>
+                        </label>
+
+                        <label class="delivery-option">
+                            <span class="left">
+                                <span class="title">Outside Dhaka</span>
+                                <span class="sub">Shipping ৳{{ number_format(site_setting('shipping_charge_outside_dhaka'), 0) }}</span>
+                            </span>
+                            <input class="form-check-input m-0"
+                                   type="radio"
+                                   name="delivery_area_choice"
+                                   value="outside_dhaka">
+                        </label>
+
+                        @if($deliveryInside === 0 && $deliveryOutside === 0)
+                            <div class="small text-muted mt-2">
+                                * Shipping charge is not set in settings (defaulting to ৳0).
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-semibold">Shipping:</span>
+                        <span class="fw-bold">
+                            ৳<span id="cartShipping">{{ number_format(site_setting('shipping_charge_inside_dhaka'), 0) }}</span>
+                        </span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-semibold">Payable:</span>
+                        <span class="fw-bold fs-5">
+                            ৳<span id="cartPayable">{{ number_format($defaultPayable, 0) }}</span>
+                        </span>
+                    </div>
+
                     @if($items->count() > 0)
                         {{-- Checkout button opens modal --}}
                         <button class="btn btn-checkout w-100 py-2 mb-2"
@@ -242,8 +344,7 @@
                     @endif
 
                     <small class="text-muted d-block">
-                        Shipping charges & VAT will be calculated at checkout. By placing the order,
-                        you agree to our terms and conditions.
+                        Shipping charges will be added based on your selected delivery area.
                     </small>
                 </div>
             </div>
@@ -295,6 +396,15 @@
                         </div>
                     </div>
 
+                    {{-- Delivery Area (synced with sidebar) --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold d-block">Delivery Area</label>
+                        <select name="delivery_area" id="deliveryAreaSelect" class="form-select" required>
+                            <option value="inside_dhaka" selected>Inside Dhaka (৳{{ number_format(site_setting('shipping_charge_inside_dhaka'), 0) }})</option>
+                            <option value="outside_dhaka">Outside Dhaka (৳{{ number_format(site_setting('shipping_charge_outside_dhaka'), 0) }})</option>
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label d-block">Payment Method</label>
                         <select name="payment_method" class="form-select" required>
@@ -310,14 +420,15 @@
                                   placeholder="Any special instructions?"></textarea>
                     </div>
 
-                    {{-- optional hidden subtotal from frontend (backend will recalc anyway) --}}
-                    <input type="hidden" name="frontend_subtotal" id="frontendSubtotalInput"
-                           value="{{ $subtotal }}">
+                    {{-- Frontend-calculated values (backend must recalc anyway) --}}
+                    <input type="hidden" name="frontend_subtotal" id="frontendSubtotalInput" value="{{ $subtotal }}">
+                    <input type="hidden" name="shipping_charge" id="shippingChargeInput" value="{{ $defaultShipping }}">
+                    <input type="hidden" name="payable_amount" id="payableAmountInput" value="{{ $defaultPayable }}">
                 </div>
 
                 <div class="modal-footer d-flex justify-content-between align-items-center">
                     <div class="fw-semibold">
-                        Payable: ৳<span id="modalPayable">{{ number_format($subtotal, 0) }}</span>
+                        Payable: ৳<span id="modalPayable">{{ number_format($defaultPayable, 0) }}</span>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         Confirm Order
@@ -332,6 +443,32 @@
 
 @push('scripts')
 <script>
+    const SHIPPING_INSIDE = {{ (int) $deliveryInside }};
+    const SHIPPING_OUTSIDE = {{ (int) $deliveryOutside }};
+
+    function getSelectedDeliveryValue() {
+        const modalSelect = document.getElementById('deliveryAreaSelect');
+        if (modalSelect && modalSelect.value) return modalSelect.value;
+
+        const checkedRadio = document.querySelector('input[name="delivery_area_choice"]:checked');
+        return checkedRadio ? checkedRadio.value : 'inside_dhaka';
+    }
+
+    function getSelectedShipping() {
+        const val = getSelectedDeliveryValue();
+        return (val === 'outside_dhaka') ? SHIPPING_OUTSIDE : SHIPPING_INSIDE;
+    }
+
+    function syncDeliveryUI(value) {
+        // radios
+        const radio = document.querySelector(`input[name="delivery_area_choice"][value="${value}"]`);
+        if (radio) radio.checked = true;
+
+        // modal select
+        const modalSelect = document.getElementById('deliveryAreaSelect');
+        if (modalSelect) modalSelect.value = value;
+    }
+
     function recalcCart() {
         let subtotal = 0;
         let totalItems = 0;
@@ -342,35 +479,44 @@
             const qty = parseInt(qtyInput.value, 10) || 0;
             const rowTotal = unitPrice * qty;
 
-            row.querySelector('.row-total').textContent = rowTotal;
+            const rowTotalEl = row.querySelector('.row-total');
+            if (rowTotalEl) rowTotalEl.textContent = rowTotal;
+
             subtotal += rowTotal;
             totalItems += qty;
         });
 
-        // Update sidebar subtotal
+        const shipping = getSelectedShipping();
+        const payable = subtotal + shipping;
+
+        // Sidebar
         const subtotalEl = document.getElementById('cartSubtotal');
-        if (subtotalEl) {
-            subtotalEl.textContent = subtotal;
-        }
+        if (subtotalEl) subtotalEl.textContent = subtotal;
 
-        // Update items count text
+        const shippingEl = document.getElementById('cartShipping');
+        if (shippingEl) shippingEl.textContent = shipping;
+
+        const payableEl = document.getElementById('cartPayable');
+        if (payableEl) payableEl.textContent = payable;
+
         const itemsCountEl = document.getElementById('cartItemsCount');
-        if (itemsCountEl) {
-            itemsCountEl.textContent = totalItems;
-        }
+        if (itemsCountEl) itemsCountEl.textContent = totalItems;
 
-        // Update modal payable + hidden input (if modal exists)
+        // Modal + hidden inputs
         const modalPayableEl = document.getElementById('modalPayable');
-        if (modalPayableEl) {
-            modalPayableEl.textContent = subtotal;
-        }
+        if (modalPayableEl) modalPayableEl.textContent = payable;
 
         const subtotalInput = document.getElementById('frontendSubtotalInput');
-        if (subtotalInput) {
-            subtotalInput.value = subtotal;
-        }
+        if (subtotalInput) subtotalInput.value = subtotal;
+
+        const shipInput = document.getElementById('shippingChargeInput');
+        if (shipInput) shipInput.value = shipping;
+
+        const payableInput = document.getElementById('payableAmountInput');
+        if (payableInput) payableInput.value = payable;
     }
 
+    // Quantity buttons
     document.querySelectorAll('.btn-qty-minus').forEach(function (btn) {
         btn.addEventListener('click', function () {
             const input = this.parentElement.querySelector('.qty-input');
@@ -390,5 +536,35 @@
             recalcCart();
         });
     });
+
+    // Sidebar delivery radios
+    document.querySelectorAll('input[name="delivery_area_choice"]').forEach((r) => {
+        r.addEventListener('change', () => {
+            syncDeliveryUI(r.value);
+            recalcCart();
+        });
+    });
+
+    // Modal delivery select
+    const deliveryAreaSelect = document.getElementById('deliveryAreaSelect');
+    if (deliveryAreaSelect) {
+        deliveryAreaSelect.addEventListener('change', function () {
+            syncDeliveryUI(this.value);
+            recalcCart();
+        });
+    }
+
+    // Modal open sync
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (checkoutModal) {
+        checkoutModal.addEventListener('shown.bs.modal', function () {
+            const val = getSelectedDeliveryValue();
+            syncDeliveryUI(val);
+            recalcCart();
+        });
+    }
+
+    // Initial calc (adds default shipping)
+    recalcCart();
 </script>
 @endpush

@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SectionTitlesController;
 use App\Http\Controllers\SiteSettingsController;
+use App\Http\Controllers\SearchController;
 
 //Frontend Routes
 
@@ -78,7 +79,8 @@ Route::prefix('admin')->middleware('admin')->group(function(){
 Route::get('signin', [UserController::class, 'show'])->name('loginform');
 Route::post('login', [UserController::class, 'login'])->name('loginroute');
 Route::get('logout', [UserController::class, 'logout'])->name('logout');
-
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
 
 
 

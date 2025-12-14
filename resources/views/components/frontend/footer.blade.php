@@ -64,7 +64,7 @@
   .footer-logo{
     width: 110px;
     height: 110px;
-    background: #fff;
+    background: #020202;
     border-radius: 999px;
     display: flex;
     align-items: center;

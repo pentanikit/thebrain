@@ -1,8 +1,9 @@
+
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container page-wrapper">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('homeRoute') }}">
             <!-- Logo -->
-            <img src="{{ asset('storage/' . site_setting('logo')) }}"  alt="{{ site_setting('site_title') }}">
+            <img src="{{ asset('storage/' . site_setting('logo')) }}" alt="{{ site_setting('site_title') }}">
 
             {{-- <h4>The Brain</h4> --}}
         </a>
@@ -32,7 +33,6 @@
 
                     <ul class="dropdown-menu" aria-labelledby="productsDropdown" data-bs-auto-close="outside">
                         @foreach ($rootCategories as $category)
-
                             @php
                                 $children = categories($category->id); // sub categories
                             @endphp
@@ -41,7 +41,7 @@
                                 {{-- Category WITH subcategories --}}
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle"
-                                    href="{{ route('productfilter', $category->slug) }}">
+                                        href="{{ route('productfilter', $category->slug) }}">
                                         {{ $category->name }}
                                     </a>
 
@@ -49,7 +49,7 @@
                                         @foreach ($children as $child)
                                             <li>
                                                 <a class="dropdown-item"
-                                                href="{{ route('productfilter', $category->slug) }}?sub_category[]={{ $child->id }}">
+                                                    href="{{ route('productfilter', $category->slug) }}?sub_category[]={{ $child->id }}">
                                                     {{ $child->name }}
                                                 </a>
                                             </li>
@@ -59,13 +59,11 @@
                             @else
                                 {{-- Category WITHOUT subcategories --}}
                                 <li>
-                                    <a class="dropdown-item"
-                                    href="{{ route('productfilter', $category->slug) }}">
+                                    <a class="dropdown-item" href="{{ route('productfilter', $category->slug) }}">
                                         {{ $category->name }}
                                     </a>
                                 </li>
                             @endif
-
                         @endforeach
                     </ul>
 
@@ -94,15 +92,20 @@
 
 
             <!-- Search (still hidden on <md, same as before) -->
-            <form class="d-none d-md-block me-3 search-wrapper" style="min-width:230px;">
-                <div class="input-group input-group-sm">
+            <form class="d-none d-md-block me-3 search-wrapper sef-search" style="min-width:230px;"
+                action="{{ route('search.index') }}" method="GET" autocomplete="off">
+                <div class="input-group input-group-sm position-relative">
                     <span class="input-group-text">
                         <i class="bi bi-search"></i>
                     </span>
-                    <input class="form-control" type="search" placeholder="Search products…">
+
+                    <input id="sefSearchInput" name="q" class="form-control" type="search"
+                        placeholder="Search products…" aria-label="Search products">
+
+                    <div id="sefSearchDropdown" class="sef-search-dropdown d-none" role="listbox"
+                        aria-label="Search suggestions"></div>
                 </div>
             </form>
-
             <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
                 <!-- user -->
                 {{-- <a href="#" class="text-dark fs-5"><i class="bi bi-person-circle"></i></a> --}}
@@ -432,4 +435,229 @@
             box-shadow: none;
         }
     }
+
+
+            /* Search suggest (Bootstrap 5 friendly) */
+        .sef-search {
+            position: relative;
+        }
+
+        .sef-search-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .12);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+            overflow: hidden;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .sef-search-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
+        }
+
+        .sef-search-item:last-child {
+            border-bottom: 0;
+        }
+
+        .sef-search-item:hover,
+        .sef-search-item.active {
+            background: rgba(13, 110, 253, .08);
+        }
+
+        .sef-search-left {
+            width: 42px;
+            flex: 0 0 42px;
+        }
+
+        .sef-search-thumb {
+            width: 42px;
+            height: 42px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f2f2f2;
+            border: 1px solid rgba(0, 0, 0, .08);
+        }
+
+        .sef-thumb-placeholder {
+            display: block;
+        }
+
+        .sef-search-body {
+            min-width: 0;
+        }
+
+        .sef-search-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sef-search-meta {
+            font-size: 12px;
+            opacity: .75;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sef-search-desc {
+            font-size: 12px;
+            opacity: .7;
+            margin-top: 4px;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 </style>
+
+
+
+@push('scripts')
+    <script>
+        (() => {
+            const input = document.getElementById('sefSearchInput');
+            const dropdown = document.getElementById('sefSearchDropdown');
+
+            if (!input || !dropdown) return;
+
+            const endpoint = @json(route('search.suggest'));
+            let t = null;
+            let activeIndex = -1;
+            let currentItems = [];
+
+            const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            } [m]));
+
+            const closeDropdown = () => {
+                dropdown.classList.add('d-none');
+                dropdown.innerHTML = '';
+                activeIndex = -1;
+                currentItems = [];
+            };
+
+            const openDropdown = () => dropdown.classList.remove('d-none');
+
+            const render = (items) => {
+                currentItems = items || [];
+                activeIndex = -1;
+
+                if (!currentItems.length) return closeDropdown();
+
+                let html = '';
+                currentItems.forEach((it, idx) => {
+                    const meta = [it.category, it.sub_category].filter(Boolean).join(' • ');
+                    const sku = it.sku ? `SKU: ${esc(it.sku)}` : '';
+                    const desc = it.desc ? esc(it.desc) : '';
+
+                    html += `
+        <a class="sef-search-item" href="${esc(it.url)}" role="option" data-idx="${idx}">
+          <div class="sef-search-left">
+            ${it.thumb ? `<img class="sef-search-thumb" width="60" height="60" src="${esc(it.thumb)}" alt="">` : `<div class="sef-search-thumb sef-thumb-placeholder"></div>`}
+          </div>
+          <div class="sef-search-body">
+            <div class="sef-search-title">${esc(it.name)}</div>
+            <div class="sef-search-meta">${esc(meta)} ${meta && sku ? ' • ' : ''}${sku}</div>
+            ${desc ? `<div class="sef-search-desc">${desc}</div>` : ''}
+          </div>
+        </a>
+      `;
+                });
+
+                dropdown.innerHTML = html;
+                openDropdown();
+            };
+
+            const setActive = (idx) => {
+                const items = dropdown.querySelectorAll('.sef-search-item');
+                items.forEach(el => el.classList.remove('active'));
+                if (idx >= 0 && idx < items.length) {
+                    items[idx].classList.add('active');
+                    items[idx].scrollIntoView({
+                        block: 'nearest'
+                    });
+                    activeIndex = idx;
+                }
+            };
+
+            const fetchSuggest = async (q) => {
+                const url = `${endpoint}?q=${encodeURIComponent(q)}`;
+                const res = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                if (!res.ok) return {
+                    items: []
+                };
+                return await res.json();
+            };
+
+            input.addEventListener('input', () => {
+                const q = input.value.trim();
+
+                if (t) clearTimeout(t);
+                if (q.length < 2) return closeDropdown();
+
+                t = setTimeout(async () => {
+                    try {
+                        const data = await fetchSuggest(q);
+                        render(data.items || []);
+                    } catch (e) {
+                        closeDropdown();
+                    }
+                }, 200); // debounce
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.sef-search-item');
+                if (dropdown.classList.contains('d-none') || !items.length) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setActive(Math.min(activeIndex + 1, items.length - 1));
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setActive(Math.max(activeIndex - 1, 0));
+                }
+                if (e.key === 'Enter') {
+                    if (activeIndex >= 0 && items[activeIndex]) {
+                        e.preventDefault();
+                        window.location.href = items[activeIndex].getAttribute('href');
+                    }
+                }
+                if (e.key === 'Escape') closeDropdown();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.sef-search')) closeDropdown();
+            });
+
+            input.addEventListener('focus', () => {
+                if (currentItems.length) openDropdown();
+            });
+        })();
+    </script>
+@endpush
