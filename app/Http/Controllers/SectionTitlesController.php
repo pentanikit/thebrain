@@ -35,7 +35,7 @@ class SectionTitlesController extends Controller
             ]
         );
 
-        Cache::forget("section_title.{$title->category_type}.{$title->key}");
+        // Cache::forget("section_title.{$title->category_type}.{$title->key}");
 
         return back()->with('success', 'Section title saved successfully.');
     }
@@ -51,14 +51,14 @@ class SectionTitlesController extends Controller
 
         $sectionTitle = SectionTitles::findOrFail($id);
         $sectionTitle->update($validated);
-        Cache::forget("section_title.{$title->category_type}.{$title->key}");
+        // Cache::forget("section_title.{$title->category_type}.{$title->key}");
         return back()->with('success', 'Section title updated successfully.');
     }
 
     public function destroy($id)
     {
         SectionTitles::findOrFail($id)->delete();
-        Cache::forget("section_title.{$title->category_type}.{$title->key}");
+        // Cache::forget("section_title.{$title->category_type}.{$title->key}");
         return back()->with('success', 'Section title deleted successfully.');
     }
 }
