@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('category_type'); // home, product, blog, etc.
+            $table->string('section_title')->nullable(); // home, product, blog, etc.
             $table->string('key');           // hero_title, feature_title, etc.
             $table->text('value');           // actual title text
 
