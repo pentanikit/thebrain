@@ -2,7 +2,8 @@
     <div class="container page-wrapper">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('homeRoute') }}">
             <!-- Logo -->
-            <img src="{{ asset('Tbe-Brain.png') }}"  alt="The Brain">
+            <img src="{{ asset('storage/' . site_setting('logo')) }}"  alt="{{ site_setting('site_title') }}">
+
             {{-- <h4>The Brain</h4> --}}
         </a>
 
@@ -31,16 +32,16 @@
 
                     <ul class="dropdown-menu" aria-labelledby="productsDropdown" data-bs-auto-close="outside">
                         @foreach ($rootCategories as $category)
+
                             @php
                                 $children = categories($category->id); // sub categories
-                                $hasChildren = $children->isNotEmpty();
                             @endphp
 
-                            @if ($hasChildren)
-                                {{-- Category WITH subcategories → side submenu --}}
+                            @if ($children->isNotEmpty())
+                                {{-- Category WITH subcategories --}}
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle"
-                                        href="{{ url('category/' . ($category->slug ?? $category->id)) }}">
+                                    href="{{ route('productfilter', $category->slug) }}">
                                         {{ $category->name }}
                                     </a>
 
@@ -48,7 +49,7 @@
                                         @foreach ($children as $child)
                                             <li>
                                                 <a class="dropdown-item"
-                                                    href="{{ url('category/' . ($child->slug ?? $child->id)) }}">
+                                                href="{{ route('productfilter', $category->slug) }}?sub_category[]={{ $child->id }}">
                                                     {{ $child->name }}
                                                 </a>
                                             </li>
@@ -56,16 +57,18 @@
                                     </ul>
                                 </li>
                             @else
-                                {{-- Category WITHOUT subcategories → simple item --}}
+                                {{-- Category WITHOUT subcategories --}}
                                 <li>
                                     <a class="dropdown-item"
-                                        href="{{ url('category/' . ($category->slug ?? $category->id)) }}">
+                                    href="{{ route('productfilter', $category->slug) }}">
                                         {{ $category->name }}
                                     </a>
                                 </li>
                             @endif
+
                         @endforeach
                     </ul>
+
                 </li>
 
 

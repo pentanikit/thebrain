@@ -9,7 +9,8 @@
 
   <!-- Centered logo -->
   <div class="footer-logo position-absolute top-20 start-50 translate-middle">
-    <img src="{{ asset('The-Brain-Logo.png') }}" alt="The Brain" class="img-fluid">
+   <img src="{{ asset('storage/' . site_setting('favicon')) }}" alt="Logo" class="img-fluid">
+
   </div>
 
   <!-- Content -->

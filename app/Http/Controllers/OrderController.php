@@ -131,4 +131,58 @@ class OrderController extends Controller
     {
         return 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
     }
+
+
+
+    public function adminIndex(Request $request)
+    {
+        $query = Order::query();
+
+        // 🔍 Search (order number / phone)
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('order_number', 'like', '%' . $request->search . '%')
+                ->orWhere('customer_phone', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // 📌 Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 📅 Date filter
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $orders = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('backend.orders.orders', compact('orders'));
+    }
+
+    public function adminShow(Order $order)
+    {
+        return view('backend.orders.orderdetails', compact('order'));
+    }
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,processing,completed,cancelled'
+        ]);
+
+        $order->update([
+            'status' => $request->status
+        ]);
+
+        return back()->with('success', 'Order status updated.');
+    }
+
+
+
+
 }

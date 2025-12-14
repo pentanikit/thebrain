@@ -389,7 +389,45 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+       
+
+        try {
+            $product = Product::with([
+                'images',
+                'specifications',
+                'descriptions',
+            ])->findOrFail($product->id);
+
+            // === Delete thumbnail from storage ===
+            if ($product->thumbnail && Storage::disk('public')->exists($product->thumbnail)) {
+                Storage::disk('public')->delete($product->thumbnail);
+            }
+
+            // === Delete gallery images from storage ===
+            if ($product->images && $product->images->count()) {
+                foreach ($product->images as $image) {
+                    if ($image->path && Storage::disk('public')->exists($image->path)) {
+                        Storage::disk('public')->delete($image->path);
+                    }
+                }
+            }
+
+            // === Delete related DB records ===
+            $product->images()->delete();
+            $product->specifications()->delete();
+            $product->descriptions()->delete();
+
+            // === Delete product ===
+            $product->delete();
+
+          
+
+            return redirect()->back()->with('success', 'Product deleted successfully.');
+        } catch (\Throwable $e) {
+          return $e;
+
+            return redirect()->back()->with('error', 'Failed to delete product.');
+        }
     }
 
 

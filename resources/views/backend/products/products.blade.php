@@ -1,6 +1,19 @@
 @extends('backend.layout')
 @section('admin')
     <main class="main-wrap">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         <header class="main-header navbar">
             <div class="col-search">
                 <form class="searchform">

@@ -2,7 +2,10 @@
 
 use App\Models\Category;
 use App\Models\Banners;
+use App\Models\SectionTitles;
+use App\Models\SiteSettings;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 if (! function_exists('categories')) {
     /**
@@ -138,28 +141,60 @@ if (! function_exists('banner_url')) {
 }
 
 
-if (! function_exists('banner_urls')) {
-    function banner_urls(array $keys): array
-    {
-        $paths = Banners::whereIn('key', $keys)
-            ->pluck('value', 'key')
-            ->toArray();
+    if (! function_exists('banner_urls')) {
+        function banner_urls(array $keys): array
+        {
+            $paths = Banners::whereIn('key', $keys)
+                ->pluck('value', 'key')
+                ->toArray();
 
-        $urls = [];
-        foreach ($paths as $key => $path) {
-            $urls[$key] = $path
-                ? Storage::disk('public')->url($path)
-                : null;
-        }
-
-       
-        foreach ($keys as $key) {
-            if (! array_key_exists($key, $urls)) {
-                $urls[$key] = null;
+            $urls = [];
+            foreach ($paths as $key => $path) {
+                $urls[$key] = $path
+                    ? Storage::disk('public')->url($path)
+                    : null;
             }
-        }
 
-        return $urls;
+        
+            foreach ($keys as $key) {
+                if (! array_key_exists($key, $urls)) {
+                    $urls[$key] = null;
+                }
+            }
+
+            return $urls;
+        }
+    }
+
+
+if (! function_exists('section_title')) {
+    function section_title(string $category, string $key)
+    {
+        return Cache::remember(
+            "section_title.{$category}.{$key}",
+            3600,
+            fn () => SectionTitles::where('category_type', $category)
+                ->where('key', $key)
+                ->select('section_title', 'value')
+                ->first()
+        );
     }
 }
+
+
+if (! function_exists('site_setting')) {
+    function site_setting(string $key, $default = null)
+    {
+        return Cache::remember(
+            "site_setting.{$key}",
+            3600,
+            function () use ($key, $default) {
+                return SiteSettings::where('key', $key)
+                    ->value('value') ?? $default;
+            }
+        );
+    }
+}
+
+
 }

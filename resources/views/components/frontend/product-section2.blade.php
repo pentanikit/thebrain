@@ -2,12 +2,13 @@
             <div class="container page-wrapper">
 
                 <!-- Heading & description -->
+                @php
+                    $productsection2 = section_title($type, 'product section 2');
+                @endphp
                 <div class="text-center mb-4 mb-md-5">
-                    <h2 class="section-title mb-2">Our {{ $type }} 2025</h2>
+                    <h2 class="section-title mb-2">{{  $productsection2->section_title }}</h2>
                     <p class="section-subtitle mx-auto text-muted">
-                        Dear Customer, the collections you see under this headline are our {{ $type }}.
-                        These are our best selling Caps. You can enjoy a quality Cap within your limited
-                        budget. These all are budget friendly collections.
+                       {{  $productsection2->value }}
                     </p>
                 </div>
 

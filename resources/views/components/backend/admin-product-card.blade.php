@@ -1,4 +1,5 @@
 <div class="col">
+    
     <div class="card card-product-grid">
         <a class="img-wrap" href="#">
             <img
@@ -20,11 +21,11 @@
                 <i class="material-icons md-edit"></i> Edit
             </a>
 
-            <form action=""
-                  method="POST"
+            <form action="{{ route('deleteproduct', $product->id) }}"
+                  method="GET"
                   class="d-inline">
                 @csrf
-                @method('DELETE')
+                
                 <button type="submit"
                         onclick="return confirm('Delete this product?')"
                         class="btn btn-sm font-sm btn-light rounded">
