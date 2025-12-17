@@ -326,7 +326,7 @@
                     </button>
                 </li> --}}
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button"
+                    <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button"
                         role="tab">
                         Descriptions
                     </button>
