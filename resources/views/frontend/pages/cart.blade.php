@@ -405,6 +405,7 @@
                         </select>
                     </div>
 
+
                     <div class="mb-3">
                         <label class="form-label d-block">Payment Method</label>
                         <select name="payment_method" class="form-select" required>

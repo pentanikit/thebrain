@@ -257,7 +257,7 @@
                                     </div>
                                 @else
                                     <div class="detail-pill mb-3">
-                                        <span class="text-danger">Specification data missing (key/value not found).</span>
+                                        <span class="text-danger">Specification data missing</span>
                                     </div>
                                 @endif
                             @empty
@@ -449,7 +449,7 @@
                 <x-frontend.product-card :type="$product->category->name" />
             @else
                 <div class="col-12">
-                    <p class="text-muted mb-0">Related products not available (subcategory missing).</p>
+                    <p class="text-muted mb-0">Related products not available.</p>
                 </div>
             @endif
         </div>
