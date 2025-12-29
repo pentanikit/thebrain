@@ -1,7 +1,7 @@
                     <!-- Product 1 -->
                     @forelse ($products as $item)
                         <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product-card h-100 d-flex flex-column">
+                            <div class="product-card h-100  d-flex flex-column">
                             @php 
                                     $reg = $item->price;
                                     $offer = $item->offer_price;
@@ -24,11 +24,11 @@
                                         alt="{{ $item->name }}"  style="object-fit: cover; border-radius: 5%;" >
                                
 
-                                    <h3 class=" my-3 product-title text-center">
+                                    <h3 class="py-2 product-title text-center">
                                        <a style="color: black; text-decoration:none;" href="{{ route('singleproduct', $item->id) }}"> {{ $item->name }}</a>
                                     </h3>
 
-                                <div class="product-divider"></div>
+                               
 
                                 <div class="product-price mb-3 text-center">
                                     <span class="price-current">{{ currency($item->offer_price ?? $item->old_price ?? $item->regular_price) }}</span>

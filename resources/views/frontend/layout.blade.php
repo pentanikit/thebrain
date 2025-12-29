@@ -389,20 +389,11 @@
 
     <main class="container hero-wrapper">
 
-
-
-
-
         @yield('pages')
-
-
-
-
-
 
     </main>
 
-
+        <x-frontend.footer />
   <style>
     .whatsapp-container{position:fixed;right:10px;bottom:12px;z-index:999}
     .whatsapp-button{background-color:rgba(35, 160, 77, 1);color:#fff;display:flex;align-items:center;border-radius:50px;text-decoration:none;font-family:sans-serif;font-size:16px;font-weight:bold;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:all .3s ease}

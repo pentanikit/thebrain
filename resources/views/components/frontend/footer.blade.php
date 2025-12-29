@@ -1,4 +1,4 @@
-<footer class="footer-wrap position-relative overflow-hidden bg-white pt-5 pb-4">
+<footer class="footer-wrap position-relative overflow-hidden bg-white my-5">
     <!-- Wave background -->
     <div class="footer-wave position-absolute top-0 start-0 w-100">
         <svg viewBox="0 0 1440 180" preserveAspectRatio="none" class="w-100 d-block">

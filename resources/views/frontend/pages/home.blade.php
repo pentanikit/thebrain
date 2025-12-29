@@ -8,6 +8,6 @@
         <x-frontend.product-section2  type="Master Copy Caps" />
         <x-frontend.product-section3  type="The Brain Caps"/>
 
-        <x-frontend.footer />
+
         {{-- <x-frontend.product-section4 /> --}}
 @endsection

@@ -237,16 +237,12 @@
 
                 <!-- Details -->
                 <div class="col-lg-6">
-                    <h1 class="product-title-main mb-2">
+                    <h1 class="product-title-main mb-2 " style="font-size: 26px;">
                         {{ $product->name }}
                     </h1>
 
                     <ul class="list-unstyled small text-muted detail-bullets mb-3">
-                        {{-- <li>1 Year Parts Panel Replacement Guarantee</li>
-                        <li>10 Years Free Service Warranty (Without Parts)</li>
-                        <li>EMI system available</li>
-                        <li>Home delivery + installation (Dhaka City)</li>
-                        <li>Outside Dhaka: Courier delivery</li> --}}
+
                         @if (!empty($product->specifications[0]) && is_iterable($product->specifications[0]->value))
                             @forelse ($product->specifications[0]->value as $item)
                                 @php
@@ -311,9 +307,7 @@
                     {{-- <div class="small text-muted my-3">
                         {{ $product->descriptions[0]->body ?? '' }}
                     </div> --}}
-                    <p class="small text-muted mb-0">
-                        * Price in Bangladesh may change without prior notice. Please confirm the latest price over phone.
-                    </p>
+
                 </div>
             </div>
 
