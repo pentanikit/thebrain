@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Order;
+use App\Services\BulkSmsBdClient;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+
+class SendOrderSmsJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 5;
+    public array $backoff = [10, 30, 60, 120, 300];
+
+    public function __construct(
+        public int $orderId,
+        public string $type = 'placed' // placed|paid|shipped etc (optional)
+    ) {}
+
+    public function handle(BulkSmsBdClient $sms): void
+    {
+        $order = Order::with('items')->find($this->orderId);
+        if (!$order) return;
+
+        // $phone = $order->customer_phone;
+        // if (!$phone) return;
+
+        $message = $this->buildMessage($order);
+
+        $res = $sms->send($phone, $message);
+
+        Log::info('Order SMS attempt', [
+            'order_id' => $order->id,
+            'order_number' => $order->order_number,
+            'to' => '01827400100',
+            'ok' => $res['ok'] ?? false,
+            'status' => $res['status'] ?? null,
+            'response' => $res['response'] ?? null,
+            'type' => $this->type,
+        ]);
+
+        if (empty($res['ok'])) {
+            throw new \RuntimeException('BulkSMSBD send failed: ' . ($res['response'] ?? 'unknown'));
+        }
+    }
+
+    private function buildMessage(Order $order): string
+    {
+        $orderNo = $order->order_number ?: ('#' . $order->id);
+        $total = $this->money($order->total);
+        $status = strtoupper((string) $order->status);
+        $pay = strtoupper((string) $order->payment_status);
+
+        // Items summary: "ProductA x1, ProductB x2"
+        $items = $order->items
+            ->take(2)
+            ->map(fn($i) => $this->short($i->product_name, 16) . ' x' . (int)$i->quantity)
+            ->implode(', ');
+
+        $moreCount = max(0, $order->items->count() - 2);
+        if ($moreCount > 0) $items .= " +{$moreCount} more";
+
+        // Keep SMS short & useful. Don’t include full address.
+        return
+            "Order Confirmed ✅
+            Order: {$orderNo}
+            Items: {$items}
+            Total: {$total}
+            Payment: {$pay}
+            Status: {$status}
+            Thank you!";
+        }
+
+    private function money($amount): string
+    {
+        if ($amount === null || $amount === '') return 'BDT 0';
+        return 'BDT ' . number_format((float)$amount, 0);
+    }
+
+    private function short(string $text, int $max): string
+    {
+        $text = trim($text);
+        return mb_strlen($text) > $max ? mb_substr($text, 0, $max - 1) . '…' : $text;
+    }
+}
