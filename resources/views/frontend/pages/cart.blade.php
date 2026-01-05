@@ -331,7 +331,7 @@
 
                     @if($items->count() > 0)
                         {{-- Checkout button opens modal --}}
-                        <button class="btn btn-checkout w-100 py-2 mb-2"
+                        <button class="btn btn-primary w-100 py-2 mb-2"
                                 type="button"
                                 data-bs-toggle="modal"
                                 data-bs-target="#checkoutModal">
