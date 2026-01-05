@@ -578,10 +578,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!form || !btn) return;
 
     form.addEventListener('submit', function () {
-        // If already loading, block double submit
         if (btn.disabled) return;
 
-        // Store original HTML once
         if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
 
         const loadingText = btn.getAttribute('data-loading-text') || 'Processing...';
@@ -592,12 +590,10 @@ document.addEventListener('DOMContentLoaded', function () {
             ${loadingText}
         `;
 
-        // Optional: disable all form inputs while submitting
-        form.querySelectorAll('input, textarea, select, button').forEach(el => {
-            if (el !== btn) el.setAttribute('disabled', 'disabled');
-        });
+        // ✅ Do NOT disable inputs (otherwise _token, hidden totals, etc won't submit)
     });
 });
 </script>
+
 
 @endpush
