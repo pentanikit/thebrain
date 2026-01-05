@@ -431,9 +431,10 @@
                     <div class="fw-semibold">
                         Payable: ৳<span id="modalPayable">{{ number_format($defaultPayable, 0) }}</span>
                     </div>
-                    <button type="submit" class="btn btn-primary">
-                        Confirm Order
-                    </button>
+                <button type="submit" class="btn btn-primary" id="checkoutSubmitBtn"
+                        data-loading-text="Placing Order...">
+                    Confirm Order
+                </button>
                 </div>
             </form>
         </div>
@@ -568,4 +569,35 @@
     // Initial calc (adds default shipping)
     recalcCart();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('checkoutForm');
+    const btn  = document.getElementById('checkoutSubmitBtn');
+
+    if (!form || !btn) return;
+
+    form.addEventListener('submit', function () {
+        // If already loading, block double submit
+        if (btn.disabled) return;
+
+        // Store original HTML once
+        if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
+
+        const loadingText = btn.getAttribute('data-loading-text') || 'Processing...';
+
+        btn.disabled = true;
+        btn.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            ${loadingText}
+        `;
+
+        // Optional: disable all form inputs while submitting
+        form.querySelectorAll('input, textarea, select, button').forEach(el => {
+            if (el !== btn) el.setAttribute('disabled', 'disabled');
+        });
+    });
+});
+</script>
+
 @endpush

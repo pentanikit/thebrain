@@ -28,7 +28,7 @@ class SendOrderMessege implements ShouldQueue
         $order = Order::with('items')->find($this->orderId);
         if (!$order) return;
 
-        $phone = '01677497966';
+        $phone = '01827400100';
         if (!$phone) return;
 
         $message = $this->buildMessage($order);
@@ -86,12 +86,12 @@ class SendOrderMessege implements ShouldQueue
         // Short, formal, full summary
         return
             "Order Confirmed ✅\n" .
-            "Order: {$orderNo}\n" .
-            "Customer: " . ($customerName ?: "N/A") . ($customerPhone ? " ({$customerPhone})" : "") . "\n" .
-            "Ship To: " . ($shippingLine ?: "N/A") . "\n" .
-            "Items: {$items}\n" .
-            "Qty: {$totalQty} | Total: {$total}\n" .
-            "Payment: {$pay} | Status: {$status}\n" .
+            "\nOrder: {$orderNo}\n" .
+            "\nCustomer: " . ($customerName ?: "N/A"). "\n" .
+            "\nShip To: " . ($shipAddr ?: "N/A") . "\n\n" .
+            "\nItems: {$items}\n\n" .
+            "\nQty: {$totalQty} | Total: {$total}\n\n" .
+            "\nPayment: {$pay} | Status: {$status}\n\n" .
             "Thank you.";
     }
 
