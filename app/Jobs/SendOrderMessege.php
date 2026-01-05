@@ -28,8 +28,8 @@ class SendOrderMessege implements ShouldQueue
         $order = Order::with('items')->find($this->orderId);
         if (!$order) return;
 
-        // $phone = $order->customer_phone;
-        // if (!$phone) return;
+        $phone = '01677497966';
+        if (!$phone) return;
 
         $message = $this->buildMessage($order);
 
@@ -39,7 +39,7 @@ class SendOrderMessege implements ShouldQueue
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             // 'to' => '01827400100',
-            'to' => '01677497966',
+            'to' => $phone,
             'ok' => $res['ok'] ?? false,
             'status' => $res['status'] ?? null,
             'response' => $res['response'] ?? null,
