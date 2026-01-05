@@ -39,7 +39,7 @@ class SendOrderMessege implements ShouldQueue
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             // 'to' => '01827400100',
-            'to' => $phone,
+            'to' => '01827400100',
             'ok' => $res['ok'] ?? false,
             'status' => $res['status'] ?? null,
             'response' => $res['response'] ?? null,
