@@ -28,7 +28,7 @@ class SendOrderMessege implements ShouldQueue
         $order = Order::with('items')->find($this->orderId);
         if (!$order) return;
 
-        $phone = '01827400100';
+        $phone = '01677497966';
         if (!$phone) return;
 
         $message = $this->buildMessage($order);
@@ -39,7 +39,7 @@ class SendOrderMessege implements ShouldQueue
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             // 'to' => '01827400100',
-            'to' => '01827400100',
+            'to' => $phone,
             'ok' => $res['ok'] ?? false,
             'status' => $res['status'] ?? null,
             'response' => $res['response'] ?? null,
@@ -51,49 +51,46 @@ class SendOrderMessege implements ShouldQueue
         }
     }
 
-    private function buildMessage(Order $order): string
-    {
-        $orderNo = $order->order_number ?: ('#' . $order->id);
-        $total   = $this->money($order->total);
-        $status  = strtoupper((string) $order->status);
-        $pay     = strtoupper((string) $order->payment_status);
+private function buildMessage(Order $order, ?string $type = null): string
+{
+    $type = $type ?? $this->type;
 
-        $customerName  = trim((string) ($order->customer_name ?? ''));
-        $customerPhone = trim((string) ($order->customer_phone ?? ''));
-        $shipAddr      = trim((string) ($order->shipping_address ?? ''));
-        $shipCity      = trim((string) ($order->shipping_city ?? ''));
-        $shipPostcode  = trim((string) ($order->shipping_postcode ?? ''));
+    $orderNo = $order->order_number ?: ('#' . $order->id);
+    $total   = $this->money($order->total);
+    $status  = strtoupper((string) $order->status);
+    $pay     = strtoupper((string) $order->payment_status);
 
-        // Total quantity (sum of all item quantities)
-        $totalQty = (int) $order->items->sum(fn($i) => (int) $i->quantity);
+    $customerName  = trim((string) ($order->customer_name ?? ''));
+    $shipAddr      = trim((string) ($order->shipping_address ?? ''));
 
-        // Items summary (keep short): "ProductA x1, ProductB x2 +N more"
-        $items = $order->items
-            ->take(2)
-            ->map(fn($i) => $this->short((string) $i->product_name, 16) . ' x' . (int) $i->quantity)
-            ->implode(', ');
+    $totalQty = (int) $order->items->sum(fn($i) => (int) $i->quantity);
 
-        $moreCount = max(0, $order->items->count() - 2);
-        if ($moreCount > 0) $items .= " +{$moreCount} more";
+    $items = $order->items
+        ->take(2)
+        ->map(fn($i) => $this->short((string) $i->product_name, 16) . ' x' . (int) $i->quantity)
+        ->implode(', ');
 
-        // Compact shipping line
-        $shippingLine = trim(implode(', ', array_filter([
-            $shipAddr,
-            $shipCity,
-            $shipPostcode ? "Post: {$shipPostcode}" : null,
-        ])));
+    $moreCount = max(0, $order->items->count() - 2);
+    if ($moreCount > 0) $items .= " +{$moreCount} more";
 
-        // Short, formal, full summary
-        return
-            "Order Confirmed ✅\n" .
-            "\nOrder: {$orderNo}\n" .
-            "\nCustomer: " . ($customerName ?: "N/A"). "\n" .
-            "\nShip To: " . ($shipAddr ?: "N/A") . "\n\n" .
-            "\nItems: {$items}\n\n" .
-            "\nQty: {$totalQty} | Total: {$total}\n\n" .
-            "\nPayment: {$pay} | Status: {$status}\n\n" .
-            "Thank you.";
-    }
+    // Optional: message header changes by type
+    $title = match ($type) {
+        'paid'    => "Payment Received ✅",
+        'shipped' => "Order Shipped ✅",
+        default   => "Order Confirmed ✅",
+    };
+
+    return
+        "{$title}\n" .
+        "\nOrder: {$orderNo}\n" .
+        "\nCustomer: " . ($customerName ?: "N/A") . "\n" .
+        "\nShip To: " . ($shipAddr ?: "N/A") . "\n" .
+        "\nItems: {$items}\n" .
+        "\nQty: {$totalQty} | Total: {$total}\n" .
+        "\nPayment: {$pay} | Status: {$status}\n" .
+        "\nThank you.";
+}
+
 
 
     private function money($amount): string
