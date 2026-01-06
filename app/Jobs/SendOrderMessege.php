@@ -59,7 +59,7 @@ private function buildMessage(Order $order, ?string $type = null): string
     $total   = $this->money($order->total);
     $status  = strtoupper((string) $order->status);
     $pay     = strtoupper((string) $order->payment_status);
-
+    $customerPhone = trim((string) ($order->customer_phone ?? ''));
     $customerName  = trim((string) ($order->customer_name ?? ''));
     $shipAddr      = trim((string) ($order->shipping_address ?? ''));
 
@@ -84,6 +84,7 @@ private function buildMessage(Order $order, ?string $type = null): string
         "{$title}\n" .
         "\nOrder: {$orderNo}\n" .
         "\nCustomer: " . ($customerName ?: "N/A") . "\n" .
+        "\nCustomer Phone: " . ($customerPhone ?: "N/A") . "\n" .
         "\nShip To: " . ($shipAddr ?: "N/A") . "\n" .
         "\nItems: {$items}\n" .
         "\nQty: {$totalQty} | Total: {$total}\n" .
