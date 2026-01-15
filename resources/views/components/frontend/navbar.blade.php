@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container page-wrapper">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('homeRoute') }}">
@@ -209,7 +208,7 @@
                         @if ($children->isNotEmpty())
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle"
-                                   href="{{ route('productfilter', $category->slug) }}">
+                                    href="{{ route('productfilter', $category->slug) }}">
                                     {{ $category->name }}
                                 </a>
 
@@ -217,7 +216,7 @@
                                     @foreach ($children as $child)
                                         <li>
                                             <a class="dropdown-item"
-                                               href="{{ route('productfilter', $category->slug) }}?sub_category[]={{ $child->id }}">
+                                                href="{{ route('productfilter', $category->slug) }}?sub_category[]={{ $child->id }}">
                                                 {{ $child->name }}
                                             </a>
                                         </li>
@@ -254,18 +253,18 @@
         </ul>
 
         <!-- Search (show inside offcanvas on mobile; desktop already has it in navbar) -->
-        <form class="d-block d-md-none mt-3 search-wrapper sef-search"
-              action="{{ route('search.index') }}" method="GET" autocomplete="off">
+        <form class="d-block d-md-none mt-3 search-wrapper sef-search" action="{{ route('search.index') }}"
+            method="GET" autocomplete="off">
             <div class="input-group input-group-sm position-relative">
                 <span class="input-group-text">
                     <i class="bi bi-search"></i>
                 </span>
 
                 <input id="sefSearchInputMobile" name="q" class="form-control" type="search"
-                       placeholder="Search products…" aria-label="Search products">
+                    placeholder="Search products…" aria-label="Search products">
 
                 <div id="sefSearchDropdownMobile" class="sef-search-dropdown d-none" role="listbox"
-                     aria-label="Search suggestions"></div>
+                    aria-label="Search suggestions"></div>
             </div>
         </form>
 
@@ -276,8 +275,7 @@
             <!-- cart dropdown (mobile id to avoid duplicate with desktop) -->
             <div class="dropdown">
                 <button class="btn p-0 border-0 bg-transparent text-dark position-relative fs-5"
-                        id="cartDropdownMobile"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    id="cartDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-cart3"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ $cart->totalQuantity() }}
@@ -285,7 +283,7 @@
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-end cart-dropdown-menu p-0 shadow-lg"
-                     aria-labelledby="cartDropdownMobile">
+                    aria-labelledby="cartDropdownMobile">
                     <!-- header -->
                     <div class="p-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -298,7 +296,7 @@
                         @forelse($items as $item)
                             <div class="d-flex align-items-center p-3 {{ !$loop->first ? 'border-top' : '' }}">
                                 <img src="{{ asset('storage') . '/' . $item->product->thumbnail ?? 'https://via.placeholder.com/80x60?text=TV' }}"
-                                     class="cart-item-thumb me-3" alt="{{ $item->product->name }}">
+                                    class="cart-item-thumb me-3" alt="{{ $item->product->name }}">
                                 <div class="flex-grow-1">
                                     <div class="small fw-semibold">{{ $item->product->name }}</div>
                                     <div class="d-flex justify-content-between align-items-center mt-1">
@@ -480,272 +478,277 @@
     }
 
 
-            /* Search suggest (Bootstrap 5 friendly) */
-        .sef-search {
-            position: relative;
-        }
+    /* Search suggest (Bootstrap 5 friendly) */
+    .sef-search {
+        position: relative;
+    }
 
-        .sef-search-dropdown {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            right: 0;
-            z-index: 1050;
-            background: #fff;
-            border: 1px solid rgba(0, 0, 0, .12);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
-            overflow: hidden;
-            max-height: 360px;
-            overflow-y: auto;
-        }
+    .sef-search-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, .12);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+        overflow: hidden;
+        max-height: 360px;
+        overflow-y: auto;
 
-        .sef-search-item {
-            display: flex;
-            gap: 10px;
-            padding: 10px 12px;
-            text-decoration: none;
-            color: inherit;
-            border-bottom: 1px solid rgba(0, 0, 0, .06);
-        }
 
-        .sef-search-item:last-child {
-            border-bottom: 0;
-        }
+    }
 
-        .sef-search-item:hover,
-        .sef-search-item.active {
-            background: rgba(13, 110, 253, .08);
-        }
+    .sef-search-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px 12px;
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid rgba(0, 0, 0, .06);
+    }
 
-        .sef-search-left {
-            width: 42px;
-            flex: 0 0 42px;
-        }
+    .sef-search-item:last-child {
+        border-bottom: 0;
+    }
 
-        .sef-search-thumb {
-            width: 42px;
-            height: 42px;
-            object-fit: cover;
-            border-radius: 10px;
-            background: #f2f2f2;
-            border: 1px solid rgba(0, 0, 0, .08);
-        }
+    .sef-search-item:hover,
+    .sef-search-item.active {
+        background: rgba(13, 110, 253, .08);
+    }
 
-        .sef-thumb-placeholder {
-            display: block;
-        }
+    .sef-search-left {
+        width: 42px;
+        flex: 0 0 42px;
+    }
 
-        .sef-search-body {
-            min-width: 0;
-        }
+    .sef-search-thumb {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 10px;
+        background: #f2f2f2;
+        border: 1px solid rgba(0, 0, 0, .08);
+    }
 
-        .sef-search-title {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.2;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .sef-thumb-placeholder {
+        display: block;
+    }
 
-        .sef-search-meta {
-            font-size: 12px;
-            opacity: .75;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .sef-search-body {
+        min-width: 0;
+    }
 
-        .sef-search-desc {
-            font-size: 12px;
-            opacity: .7;
-            margin-top: 4px;
-            line-height: 1.25;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    .sef-search-title {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sef-search-meta {
+        font-size: 12px;
+        opacity: .75;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sef-search-desc {
+        font-size: 12px;
+        opacity: .7;
+        margin-top: 4px;
+        line-height: 1.25;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 </style>
 
 <style>
     /* Desktop: flyout submenu */
-@media (min-width: 992px) {
-  .dropdown-submenu { position: relative; }
-  .dropdown-submenu > .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-left: .1rem;
-  }
-}
+    @media (min-width: 992px) {
+        .dropdown-submenu {
+            position: relative;
+        }
 
-/* Mobile/offcanvas: submenu opens beneath */
-@media (max-width: 991.98px) {
-  .dropdown-submenu > .dropdown-menu {
-    position: static;
-    margin-left: 0;
-    padding-left: .5rem;
-  }
-}
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: .1rem;
+        }
+    }
 
+    /* Mobile/offcanvas: submenu opens beneath */
+    @media (max-width: 991.98px) {
+        .dropdown-submenu>.dropdown-menu {
+            position: static;
+            margin-left: 0;
+            padding-left: .5rem;
+        }
+    }
 </style>
 
 
 @push('scripts')
-    <script>
-        (() => {
-            const input = document.getElementById('sefSearchInput');
-            const dropdown = document.getElementById('sefSearchDropdown');
-
-            if (!input || !dropdown) return;
-
-            const endpoint = @json(route('search.suggest'));
-            let t = null;
-            let activeIndex = -1;
-            let currentItems = [];
-
-            const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            } [m]));
-
-            const closeDropdown = () => {
-                dropdown.classList.add('d-none');
-                dropdown.innerHTML = '';
-                activeIndex = -1;
-                currentItems = [];
-            };
-
-            const openDropdown = () => dropdown.classList.remove('d-none');
-
-            const render = (items) => {
-                currentItems = items || [];
-                activeIndex = -1;
-
-                if (!currentItems.length) return closeDropdown();
-
-                let html = '';
-                currentItems.forEach((it, idx) => {
-                    const meta = [it.category, it.sub_category].filter(Boolean).join(' • ');
-                    const sku = it.sku ? `SKU: ${esc(it.sku)}` : '';
-                    const desc = it.desc ? esc(it.desc) : '';
-
-                    html += `
-        <a class="sef-search-item" href="${esc(it.url)}" role="option" data-idx="${idx}">
-          <div class="sef-search-left">
-            ${it.thumb ? `<img class="sef-search-thumb" width="60" height="60" src="${esc(it.thumb)}" alt="">` : `<div class="sef-search-thumb sef-thumb-placeholder"></div>`}
-          </div>
-          <div class="sef-search-body">
-            <div class="sef-search-title">${esc(it.name)}</div>
-            <div class="sef-search-meta">${esc(meta)} ${meta && sku ? ' • ' : ''}${sku}</div>
-            ${desc ? `<div class="sef-search-desc">${desc}</div>` : ''}
-          </div>
-        </a>
-      `;
-                });
-
-                dropdown.innerHTML = html;
-                openDropdown();
-            };
-
-            const setActive = (idx) => {
-                const items = dropdown.querySelectorAll('.sef-search-item');
-                items.forEach(el => el.classList.remove('active'));
-                if (idx >= 0 && idx < items.length) {
-                    items[idx].classList.add('active');
-                    items[idx].scrollIntoView({
-                        block: 'nearest'
-                    });
-                    activeIndex = idx;
-                }
-            };
-
-            const fetchSuggest = async (q) => {
-                const url = `${endpoint}?q=${encodeURIComponent(q)}`;
-                const res = await fetch(url, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                if (!res.ok) return {
-                    items: []
-                };
-                return await res.json();
-            };
-
-            input.addEventListener('input', () => {
-                const q = input.value.trim();
-
-                if (t) clearTimeout(t);
-                if (q.length < 2) return closeDropdown();
-
-                t = setTimeout(async () => {
-                    try {
-                        const data = await fetchSuggest(q);
-                        render(data.items || []);
-                    } catch (e) {
-                        closeDropdown();
-                    }
-                }, 200); // debounce
-            });
-
-            input.addEventListener('keydown', (e) => {
-                const items = dropdown.querySelectorAll('.sef-search-item');
-                if (dropdown.classList.contains('d-none') || !items.length) return;
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    setActive(Math.min(activeIndex + 1, items.length - 1));
-                }
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    setActive(Math.max(activeIndex - 1, 0));
-                }
-                if (e.key === 'Enter') {
-                    if (activeIndex >= 0 && items[activeIndex]) {
-                        e.preventDefault();
-                        window.location.href = items[activeIndex].getAttribute('href');
-                    }
-                }
-                if (e.key === 'Escape') closeDropdown();
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.sef-search')) closeDropdown();
-            });
-
-            input.addEventListener('focus', () => {
-                if (currentItems.length) openDropdown();
-            });
-        })();
-    </script>
-
-
-
 <script>
-document.addEventListener('click', function (e) {
-  const toggle = e.target.closest('.dropdown-submenu > .dropdown-item.dropdown-toggle');
-  if (!toggle) return;
+(() => {
 
-  e.preventDefault();
-  e.stopPropagation();
+    const endpoint = @json(route('search.suggest'));
+    let t = null;
 
-  const submenu = toggle.nextElementSibling;
-  if (!submenu || !submenu.classList.contains('dropdown-menu')) return;
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    }[m]));
 
-  // close other open submenus in same parent
-  const parentMenu = toggle.closest('.dropdown-menu');
-  parentMenu.querySelectorAll(':scope .dropdown-menu.show').forEach(m => {
-    if (m !== submenu) m.classList.remove('show');
-  });
+    document.querySelectorAll('.sef-search').forEach(wrapper => {
 
-  submenu.classList.toggle('show');
-});
+        const input = wrapper.querySelector('input[name="q"]');
+        const dropdown = wrapper.querySelector('.sef-search-dropdown');
+
+        if (!input || !dropdown) return;
+
+        let activeIndex = -1;
+        let currentItems = [];
+
+        const closeDropdown = () => {
+            dropdown.classList.add('d-none');
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+            currentItems = [];
+        };
+
+        const openDropdown = () => dropdown.classList.remove('d-none');
+
+        const render = (items) => {
+            currentItems = items || [];
+            activeIndex = -1;
+
+            if (!currentItems.length) return closeDropdown();
+
+            let html = '';
+            currentItems.forEach((it, idx) => {
+                const meta = [it.category, it.sub_category].filter(Boolean).join(' • ');
+                const sku = it.sku ? `SKU: ${esc(it.sku)}` : '';
+                const desc = it.desc ? esc(it.desc) : '';
+
+                html += `
+<a class="sef-search-item" href="${esc(it.url)}" role="option" data-idx="${idx}">
+  <div class="sef-search-left">
+    ${it.thumb
+        ? `<img class="sef-search-thumb" width="60" height="60" src="${esc(it.thumb)}" alt="">`
+        : `<div class="sef-search-thumb sef-thumb-placeholder"></div>`}
+  </div>
+  <div class="sef-search-body">
+    <div class="sef-search-title">${esc(it.name)}</div>
+    <div class="sef-search-meta">${esc(meta)} ${meta && sku ? ' • ' : ''}${sku}</div>
+    ${desc ? `<div class="sef-search-desc">${desc}</div>` : ''}
+  </div>
+</a>`;
+            });
+
+            dropdown.innerHTML = html;
+            openDropdown();
+        };
+
+        const setActive = (idx) => {
+            const items = dropdown.querySelectorAll('.sef-search-item');
+            items.forEach(el => el.classList.remove('active'));
+
+            if (idx >= 0 && idx < items.length) {
+                items[idx].classList.add('active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+                activeIndex = idx;
+            }
+        };
+
+        const fetchSuggest = async (q) => {
+            const res = await fetch(`${endpoint}?q=${encodeURIComponent(q)}`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) return { items: [] };
+            return await res.json();
+        };
+
+        input.addEventListener('input', () => {
+            const q = input.value.trim();
+
+            if (t) clearTimeout(t);
+            if (q.length < 2) return closeDropdown();
+
+            t = setTimeout(async () => {
+                try {
+                    const data = await fetchSuggest(q);
+                    render(data.items || []);
+                } catch {
+                    closeDropdown();
+                }
+            }, 200);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            const items = dropdown.querySelectorAll('.sef-search-item');
+            if (dropdown.classList.contains('d-none') || !items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(Math.min(activeIndex + 1, items.length - 1));
+            }
+
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(Math.max(activeIndex - 1, 0));
+            }
+
+            if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                window.location.href = items[activeIndex].getAttribute('href');
+            }
+
+            if (e.key === 'Escape') closeDropdown();
+        });
+
+        input.addEventListener('focus', () => {
+            if (currentItems.length) openDropdown();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) closeDropdown();
+        });
+    });
+
+})();
 </script>
 
+
+
+    <script>
+        document.addEventListener('click', function(e) {
+            const toggle = e.target.closest('.dropdown-submenu > .dropdown-item.dropdown-toggle');
+            if (!toggle) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const submenu = toggle.nextElementSibling;
+            if (!submenu || !submenu.classList.contains('dropdown-menu')) return;
+
+            // close other open submenus in same parent
+            const parentMenu = toggle.closest('.dropdown-menu');
+            parentMenu.querySelectorAll(':scope .dropdown-menu.show').forEach(m => {
+                if (m !== submenu) m.classList.remove('show');
+            });
+
+            submenu.classList.toggle('show');
+        });
+    </script>
 @endpush
