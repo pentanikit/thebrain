@@ -6,6 +6,28 @@
 
             {{-- <h4>The Brain</h4> --}}
         </a>
+        {{-- MOBILE SEARCH (before hamburger) --}}
+        <form class="d-flex d-md-none me-2 search-wrapper sef-search"
+            action="{{ route('search.index') }}"
+            method="GET"
+            autocomplete="off"
+            style="flex:1; max-width:220px;">
+            <div class="input-group input-group-sm position-relative w-100">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+
+                <input name="q"
+                    class="form-control"
+                    type="search"
+                    placeholder="Search…"
+                    aria-label="Search products">
+
+                <div class="sef-search-dropdown d-none"
+                    role="listbox"
+                    aria-label="Search suggestions"></div>
+            </div>
+        </form>
 
         <!-- Toggler now opens OFFCANVAS -->
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNavbarOffcanvas"
@@ -596,138 +618,144 @@
 
 
 @push('scripts')
-<script>
-(() => {
+    <script>
+        (() => {
 
-    const endpoint = @json(route('search.suggest'));
-    let t = null;
+            const endpoint = @json(route('search.suggest'));
+            let t = null;
 
-    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    }[m]));
+            const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (m) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            } [m]));
 
-    document.querySelectorAll('.sef-search').forEach(wrapper => {
+            document.querySelectorAll('.sef-search').forEach(wrapper => {
 
-        const input = wrapper.querySelector('input[name="q"]');
-        const dropdown = wrapper.querySelector('.sef-search-dropdown');
+                const input = wrapper.querySelector('input[name="q"]');
+                const dropdown = wrapper.querySelector('.sef-search-dropdown');
 
-        if (!input || !dropdown) return;
+                if (!input || !dropdown) return;
 
-        let activeIndex = -1;
-        let currentItems = [];
+                let activeIndex = -1;
+                let currentItems = [];
 
-        const closeDropdown = () => {
-            dropdown.classList.add('d-none');
-            dropdown.innerHTML = '';
-            activeIndex = -1;
-            currentItems = [];
-        };
+                const closeDropdown = () => {
+                    dropdown.classList.add('d-none');
+                    dropdown.innerHTML = '';
+                    activeIndex = -1;
+                    currentItems = [];
+                };
 
-        const openDropdown = () => dropdown.classList.remove('d-none');
+                const openDropdown = () => dropdown.classList.remove('d-none');
 
-        const render = (items) => {
-            currentItems = items || [];
-            activeIndex = -1;
+                const render = (items) => {
+                    currentItems = items || [];
+                    activeIndex = -1;
 
-            if (!currentItems.length) return closeDropdown();
+                    if (!currentItems.length) return closeDropdown();
 
-            let html = '';
-            currentItems.forEach((it, idx) => {
-                const meta = [it.category, it.sub_category].filter(Boolean).join(' • ');
-                const sku = it.sku ? `SKU: ${esc(it.sku)}` : '';
-                const desc = it.desc ? esc(it.desc) : '';
+                    let html = '';
+                    currentItems.forEach((it, idx) => {
+                        const meta = [it.category, it.sub_category].filter(Boolean).join(' • ');
+                        const sku = it.sku ? `SKU: ${esc(it.sku)}` : '';
+                        const desc = it.desc ? esc(it.desc) : '';
 
-                html += `
-<a class="sef-search-item" href="${esc(it.url)}" role="option" data-idx="${idx}">
-  <div class="sef-search-left">
-    ${it.thumb
-        ? `<img class="sef-search-thumb" width="60" height="60" src="${esc(it.thumb)}" alt="">`
-        : `<div class="sef-search-thumb sef-thumb-placeholder"></div>`}
-  </div>
-  <div class="sef-search-body">
-    <div class="sef-search-title">${esc(it.name)}</div>
-    <div class="sef-search-meta">${esc(meta)} ${meta && sku ? ' • ' : ''}${sku}</div>
-    ${desc ? `<div class="sef-search-desc">${desc}</div>` : ''}
-  </div>
-</a>`;
+                        html += `
+                            <a class="sef-search-item" href="${esc(it.url)}" role="option" data-idx="${idx}">
+                            <div class="sef-search-left">
+                                ${it.thumb
+                                    ? `<img class="sef-search-thumb" width="60" height="60" src="${esc(it.thumb)}" alt="">`
+                                    : `<div class="sef-search-thumb sef-thumb-placeholder"></div>`}
+                            </div>
+                            <div class="sef-search-body">
+                                <div class="sef-search-title">${esc(it.name)}</div>
+                                <div class="sef-search-meta">${esc(meta)} ${meta && sku ? ' • ' : ''}${sku}</div>
+                                ${desc ? `<div class="sef-search-desc">${desc}</div>` : ''}
+                            </div>
+                            </a>`;
+                    });
+
+                    dropdown.innerHTML = html;
+                    openDropdown();
+                };
+
+                const setActive = (idx) => {
+                    const items = dropdown.querySelectorAll('.sef-search-item');
+                    items.forEach(el => el.classList.remove('active'));
+
+                    if (idx >= 0 && idx < items.length) {
+                        items[idx].classList.add('active');
+                        items[idx].scrollIntoView({
+                            block: 'nearest'
+                        });
+                        activeIndex = idx;
+                    }
+                };
+
+                const fetchSuggest = async (q) => {
+                    const res = await fetch(`${endpoint}?q=${encodeURIComponent(q)}`, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    if (!res.ok) return {
+                        items: []
+                    };
+                    return await res.json();
+                };
+
+                input.addEventListener('input', () => {
+                    const q = input.value.trim();
+
+                    if (t) clearTimeout(t);
+                    if (q.length < 2) return closeDropdown();
+
+                    t = setTimeout(async () => {
+                        try {
+                            const data = await fetchSuggest(q);
+                            render(data.items || []);
+                        } catch {
+                            closeDropdown();
+                        }
+                    }, 200);
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    const items = dropdown.querySelectorAll('.sef-search-item');
+                    if (dropdown.classList.contains('d-none') || !items.length) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        setActive(Math.min(activeIndex + 1, items.length - 1));
+                    }
+
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        setActive(Math.max(activeIndex - 1, 0));
+                    }
+
+                    if (e.key === 'Enter' && activeIndex >= 0) {
+                        e.preventDefault();
+                        window.location.href = items[activeIndex].getAttribute('href');
+                    }
+
+                    if (e.key === 'Escape') closeDropdown();
+                });
+
+                input.addEventListener('focus', () => {
+                    if (currentItems.length) openDropdown();
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) closeDropdown();
+                });
             });
 
-            dropdown.innerHTML = html;
-            openDropdown();
-        };
-
-        const setActive = (idx) => {
-            const items = dropdown.querySelectorAll('.sef-search-item');
-            items.forEach(el => el.classList.remove('active'));
-
-            if (idx >= 0 && idx < items.length) {
-                items[idx].classList.add('active');
-                items[idx].scrollIntoView({ block: 'nearest' });
-                activeIndex = idx;
-            }
-        };
-
-        const fetchSuggest = async (q) => {
-            const res = await fetch(`${endpoint}?q=${encodeURIComponent(q)}`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            if (!res.ok) return { items: [] };
-            return await res.json();
-        };
-
-        input.addEventListener('input', () => {
-            const q = input.value.trim();
-
-            if (t) clearTimeout(t);
-            if (q.length < 2) return closeDropdown();
-
-            t = setTimeout(async () => {
-                try {
-                    const data = await fetchSuggest(q);
-                    render(data.items || []);
-                } catch {
-                    closeDropdown();
-                }
-            }, 200);
-        });
-
-        input.addEventListener('keydown', (e) => {
-            const items = dropdown.querySelectorAll('.sef-search-item');
-            if (dropdown.classList.contains('d-none') || !items.length) return;
-
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                setActive(Math.min(activeIndex + 1, items.length - 1));
-            }
-
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                setActive(Math.max(activeIndex - 1, 0));
-            }
-
-            if (e.key === 'Enter' && activeIndex >= 0) {
-                e.preventDefault();
-                window.location.href = items[activeIndex].getAttribute('href');
-            }
-
-            if (e.key === 'Escape') closeDropdown();
-        });
-
-        input.addEventListener('focus', () => {
-            if (currentItems.length) openDropdown();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!wrapper.contains(e.target)) closeDropdown();
-        });
-    });
-
-})();
-</script>
+        })();
+    </script>
 
 
 
